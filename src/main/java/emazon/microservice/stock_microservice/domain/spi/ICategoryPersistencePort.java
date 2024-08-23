@@ -1,6 +1,8 @@
 package emazon.microservice.stock_microservice.domain.spi;
 
 import emazon.microservice.stock_microservice.domain.model.Category;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 import java.util.Set;
@@ -11,7 +13,7 @@ public interface ICategoryPersistencePort {
     Category findByName(String name);
     void delete(Category category);
     Category update(Category category);
-    List<Category> findAll();
+    Page<Category> findAll(Pageable pageable);
     Category findById(Long id);
     void deleteAll();
     void deleteById(Long id);
@@ -20,5 +22,6 @@ public interface ICategoryPersistencePort {
 
     // Método para obtener nombres de categorías por sus IDs
     Set<String> getCategoryNamesByIds(Set<Long> ids);
+    boolean existsByName(String name);
 
 }

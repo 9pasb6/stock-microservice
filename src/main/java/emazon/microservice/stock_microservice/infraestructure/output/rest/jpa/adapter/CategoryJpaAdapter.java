@@ -6,6 +6,8 @@ import emazon.microservice.stock_microservice.infraestructure.output.rest.jpa.en
 import emazon.microservice.stock_microservice.infraestructure.output.rest.jpa.mapper.ICategoryEntityMapper;
 import emazon.microservice.stock_microservice.infraestructure.output.rest.jpa.repository.CategoryRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -53,11 +55,8 @@ public class CategoryJpaAdapter implements ICategoryPersistencePort {
     }
 
     @Override
-    public List<Category> findAll() {
-        return categoryRepository.findAll()
-                .stream()
-                .map(categoryEntityMapper::categoryEntityToCategory)
-                .toList();
+    public Page<Category> findAll(Pageable pageable) {
+        return categoryRepository.findAll(pageable).map(categoryEntityMapper::categoryEntityToCategory);
     }
 
     @Override
@@ -91,5 +90,10 @@ public class CategoryJpaAdapter implements ICategoryPersistencePort {
                 .stream()
                 .map(CategoryEntity::getName) // Aquí CategoryEntity es la clase y getName es el método de instancia
                 .collect(Collectors.toSet());
+    }
+
+    @Override
+    public boolean existsByName(String name) {
+        return categoryRepository.existsByName(name);
     }
 }

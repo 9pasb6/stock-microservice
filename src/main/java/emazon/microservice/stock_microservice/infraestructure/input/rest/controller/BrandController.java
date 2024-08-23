@@ -4,6 +4,10 @@ import emazon.microservice.stock_microservice.aplication.dto.request.BrandReques
 import emazon.microservice.stock_microservice.aplication.dto.response.BrandResponse;
 import emazon.microservice.stock_microservice.aplication.handler.IBrandHandler;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -23,8 +27,15 @@ public class BrandController {
     }
 
     @GetMapping
-    public ResponseEntity<List<BrandResponse>> getAllBrands() {
-        List<BrandResponse> brands = brandHandler.getAllBrands();
+    public ResponseEntity<Page<BrandResponse>> getAllBrands(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "name") String sortBy,
+            @RequestParam(defaultValue = "asc") String direction) {
+
+        Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.fromString(direction), sortBy));
+        Page<BrandResponse> brands = brandHandler.getAllBrands(pageable);
+
         return ResponseEntity.ok(brands);
     }
 

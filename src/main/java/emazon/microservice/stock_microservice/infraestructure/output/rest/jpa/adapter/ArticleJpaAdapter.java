@@ -30,8 +30,6 @@ public class ArticleJpaAdapter implements IArticlePersistencePort {
 
     @Override
     public void saveArticle(Article article) {
-        System.out.println("Saving article name: " + article.getName());
-        System.out.println("Saving article complete: " + article);
         articleRepository.save(articleEntityMapper.articleToArticleEntity(article));
     }
 

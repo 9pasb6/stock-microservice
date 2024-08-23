@@ -1,6 +1,9 @@
 package emazon.microservice.stock_microservice.domain.api;
 
+import emazon.microservice.stock_microservice.domain.model.Brand;
 import emazon.microservice.stock_microservice.domain.model.Category;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 import java.util.Set;
@@ -11,7 +14,7 @@ public interface ICategoryServicePort {
     Category findByName(String name);
     void delete(Category category);
     Category update(Category category);
-    List<Category> findAll();
+    Page<Category> findAll(Pageable pageable);
     void deleteAll();
     void deleteById(Long id);
     // Método para obtener categorías por sus IDs

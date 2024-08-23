@@ -2,9 +2,14 @@ package emazon.microservice.stock_microservice.infraestructure.input.rest.contro
 
 
 import emazon.microservice.stock_microservice.aplication.dto.request.CategoryRequest;
+import emazon.microservice.stock_microservice.aplication.dto.response.BrandResponse;
 import emazon.microservice.stock_microservice.aplication.dto.response.CategoryResponse;
 import emazon.microservice.stock_microservice.aplication.handler.ICategoryHandler;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -25,11 +30,19 @@ public class CategoryController {
     }
 
     @GetMapping
-    public ResponseEntity<List<CategoryResponse>> getAllCategories() {
-        List<CategoryResponse> categories = categoryHandler.findAll();
-        return ResponseEntity.ok(categories);
+    public ResponseEntity<Page<CategoryResponse>> getAllCategories(
+        @RequestParam(defaultValue = "0") int page,
+        @RequestParam(defaultValue = "10") int size,
+        @RequestParam(defaultValue = "name") String sortBy,
+        @RequestParam(defaultValue = "asc") String direction) {
+
+            Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.fromString(direction), sortBy));
+            Page<CategoryResponse> categories = categoryHandler.findAll(pageable);
+
+            return ResponseEntity.ok(categories);
     }
 
+    
     @GetMapping("/{name}")
     public ResponseEntity<CategoryResponse> getCategoryByName(@PathVariable String name) {
         CategoryResponse category = categoryHandler.findByName(name);

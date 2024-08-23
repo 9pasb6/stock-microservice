@@ -8,6 +8,8 @@ import emazon.microservice.stock_microservice.aplication.mapper.response.BrandRe
 import emazon.microservice.stock_microservice.domain.api.IBrandServicePort;
 import emazon.microservice.stock_microservice.domain.model.Brand;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -30,11 +32,9 @@ public class BrandHandler implements IBrandHandler {
     }
 
     @Override
-    public List<BrandResponse> getAllBrands() {
-        List<Brand> brands = brandServicePort.findAll();
-        return brands.stream()
-                .map(brandResponseMapper::brandToResponse)
-                .collect(Collectors.toList());
+    public Page<BrandResponse> getAllBrands(Pageable pageable) {
+        Page<Brand> brands = brandServicePort.findAll(pageable);
+        return brands.map(brandResponseMapper::brandToResponse);
     }
 
     @Override

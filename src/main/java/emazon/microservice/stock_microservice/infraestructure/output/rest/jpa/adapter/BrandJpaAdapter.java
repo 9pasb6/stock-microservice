@@ -1,10 +1,13 @@
 package emazon.microservice.stock_microservice.infraestructure.output.rest.jpa.adapter;
 
+import emazon.microservice.stock_microservice.domain.model.Article;
 import emazon.microservice.stock_microservice.domain.model.Brand;
 import emazon.microservice.stock_microservice.domain.spi.IBrandPersistencePort;
 import emazon.microservice.stock_microservice.infraestructure.output.rest.jpa.mapper.IBrandEntityMapper;
 import emazon.microservice.stock_microservice.infraestructure.output.rest.jpa.repository.BrandRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -17,12 +20,11 @@ public class BrandJpaAdapter implements IBrandPersistencePort {
     private final IBrandEntityMapper brandEntityMapper;
 
     @Override
-    public List<Brand> findAll() {
-        return brandRepository.findAll()
-                .stream()
-                .map(brandEntityMapper::brandEntityToBrand)
-                .toList();
+    public Page<Brand> findAll(Pageable pageable) {
+        return brandRepository.findAll(pageable)
+                .map(brandEntityMapper::brandEntityToBrand);
     }
+
 
     @Override
     public Brand save(Brand brand) {
@@ -62,6 +64,11 @@ public class BrandJpaAdapter implements IBrandPersistencePort {
                 .map(brandEntityMapper::brandEntityToBrand)
                 .findFirst()
                 .orElse(null);
+    }
+
+    @Override
+    public boolean existsByName(String name) {
+        return brandRepository.existsByName(name);
     }
 
 

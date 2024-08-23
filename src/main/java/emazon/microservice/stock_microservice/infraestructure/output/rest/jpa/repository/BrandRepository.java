@@ -9,4 +9,5 @@ import java.util.Optional;
 @Repository
 public interface BrandRepository extends JpaRepository<BrandEntity, Long> {
 
+    boolean existsByName(String name);
 }

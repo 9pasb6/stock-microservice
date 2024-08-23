@@ -1,13 +1,17 @@
 package emazon.microservice.stock_microservice.aplication.handler.impl;
 
 import emazon.microservice.stock_microservice.aplication.dto.request.CategoryRequest;
+import emazon.microservice.stock_microservice.aplication.dto.response.BrandResponse;
 import emazon.microservice.stock_microservice.aplication.dto.response.CategoryResponse;
 import emazon.microservice.stock_microservice.aplication.handler.ICategoryHandler;
 import emazon.microservice.stock_microservice.aplication.mapper.request.CategoryRequestMapper;
 import emazon.microservice.stock_microservice.aplication.mapper.response.CategoryResponseMapper;
 import emazon.microservice.stock_microservice.domain.api.ICategoryServicePort;
+import emazon.microservice.stock_microservice.domain.model.Brand;
 import emazon.microservice.stock_microservice.domain.model.Category;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -53,12 +57,12 @@ public class CategoryHandler implements ICategoryHandler {
     }
 
     @Override
-    public List<CategoryResponse> findAll() {
-        List<Category> categories = categoryServicePort.findAll();
-        return categories.stream()
-                .map(categoryResponseMapper::categoryToResponse)
-                .collect(Collectors.toList());
+    public Page<CategoryResponse> findAll(Pageable pageable) {
+        Page<Category> categories = categoryServicePort.findAll(pageable);
+        return categories.map(categoryResponseMapper::categoryToResponse);
     }
+
+
 
     @Override
     public void deleteAll() {
