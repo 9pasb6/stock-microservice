@@ -174,7 +174,3 @@ stock-microservice/
 This microservice is designed with scalability, maintainability, and testability in mind, adhering to the principles of Hexagonal Architecture. It ensures that the core business logic is clean, independent, and easily testable, while external concerns like persistence and web handling are decoupled and managed in separate layers.
 
 Swagger provides comprehensive API documentation, and Mockito-based unit tests guarantee the integrity of business logic. These features combined make the Stock Microservice robust, reliable, and ready for integration into the broader **Emazon** platform.
-
----
-
-Este README actualizado ahora incluye detalles sobre la documentación de Swagger y los tests unitarios utilizando Mockito. Si necesitas más ajustes, no dudes en pedírmelo.
