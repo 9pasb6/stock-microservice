@@ -1,7 +1,3 @@
-Aquí tienes el README actualizado con la inclusión de la documentación con Swagger y los tests con Mockito:
-
----
-
 # Stock Microservice
 
 ## Overview
