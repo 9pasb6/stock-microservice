@@ -1,19 +1,17 @@
 package emazon.microservice.stock_microservice.domain.model;
 
-import java.util.Set;
+import java.util.List;
+import java.util.Objects;
 
 public class Category {
 
     private Long id;
     private String name;
     private String description;
-    private Set<Long> articleIds; // Agregado para reflejar relación muchos a muchos con Article.
+    private List<Long> articleIds;
 
-    // Constructors
     public Category() {
     }
-
-
 
     public Category(Long id, String name, String description) {
         this.id = id;
@@ -21,7 +19,7 @@ public class Category {
         this.description = description;
     }
 
-    public Category(Long id, String name, String description, Set<Long> articleIds) {
+    public Category(Long id, String name, String description, List<Long> articleIds) {
         this.id = id;
         this.name = name;
         this.description = description;
@@ -52,11 +50,35 @@ public class Category {
         this.description = description;
     }
 
-    public Set<Long> getArticleIds() {
+    public List<Long> getArticleIds() {
         return articleIds;
     }
 
-    public void setArticleIds(Set<Long> articleIds) {
+    public void setArticleIds(List<Long> articleIds) {
         this.articleIds = articleIds;
+    }
+
+    @Override
+    public String toString() {
+        return "Category{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", description='" + description + '\'' +
+                ", articleIds=" + articleIds +
+                '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Category category = (Category) o;
+        return Objects.equals(name, category.name) &&
+                Objects.equals(description, category.description);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(name, description);
     }
 }

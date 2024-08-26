@@ -1,17 +1,14 @@
 package emazon.microservice.stock_microservice.domain.api;
 
 import emazon.microservice.stock_microservice.domain.model.Article;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 
 import java.util.List;
-
 
 public interface IArticleServicePort {
 
         void saveArticle(Article article);
 
-        Page<Article> getAllArticles(Pageable pageable);
+        List<Article> getAllArticles(String order);
 
         Article getArticle(Long id);
 
@@ -19,7 +16,7 @@ public interface IArticleServicePort {
 
         void deleteArticle(Long id);
 
-//        Page<Article> getAllArticles(Pageable pageable);
+        List<Article> getAllByBrandName(String brandName, String order); // Nuevo método
 
-
+        List<Article> getAllByCategoryName(String categoryName, String order); // Nuevo método
 }

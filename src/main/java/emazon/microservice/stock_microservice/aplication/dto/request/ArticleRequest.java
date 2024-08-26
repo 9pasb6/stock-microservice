@@ -1,10 +1,12 @@
 package emazon.microservice.stock_microservice.aplication.dto.request;
 
-
-import lombok.*;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
+import lombok.AllArgsConstructor;
 
 import java.math.BigDecimal;
-import java.util.Set;
+import java.util.List;
 
 @Getter
 @Setter
@@ -17,5 +19,5 @@ public class ArticleRequest {
     private BigDecimal price;
     private Integer stockQuantity;
     private Long brandId;
-    private Set<Long> categoryIds;
+    private List<Long> categoryIds;
 }

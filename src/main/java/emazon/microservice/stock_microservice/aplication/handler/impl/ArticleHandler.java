@@ -6,23 +6,12 @@ import emazon.microservice.stock_microservice.aplication.handler.IArticleHandler
 import emazon.microservice.stock_microservice.aplication.mapper.request.ArticleRequestMapper;
 import emazon.microservice.stock_microservice.aplication.mapper.response.ArticleResponseMapper;
 import emazon.microservice.stock_microservice.domain.api.IArticleServicePort;
-import emazon.microservice.stock_microservice.domain.api.IBrandServicePort;
-import emazon.microservice.stock_microservice.domain.api.ICategoryServicePort;
 import emazon.microservice.stock_microservice.domain.model.Article;
-import emazon.microservice.stock_microservice.domain.model.Category;
-import emazon.microservice.stock_microservice.domain.model.Brand;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Collections;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
@@ -41,9 +30,11 @@ public class ArticleHandler implements IArticleHandler {
     }
 
     @Override
-    public Page<ArticleResponse> getAllArticles(Pageable pageable) {
-        Page<Article> articles = articleServicePort.getAllArticles(pageable);
-        return articles.map(articleResponseMapper::articleToArticleResponse);
+    public List<ArticleResponse> getAllArticles(String order) {
+        List<Article> articles = articleServicePort.getAllArticles(order);
+        return articles.stream()
+                .map(articleResponseMapper::articleToArticleResponse)
+                .collect(Collectors.toList());
     }
 
     @Override
@@ -61,6 +52,22 @@ public class ArticleHandler implements IArticleHandler {
     @Override
     public void deleteArticle(Long id) {
         articleServicePort.deleteArticle(id);
+    }
+
+    @Override
+    public List<ArticleResponse> getAllByBrandName(String brandName, String order) {
+        List<Article> articles = articleServicePort.getAllByBrandName(brandName, order);
+        return articles.stream()
+                .map(articleResponseMapper::articleToArticleResponse)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<ArticleResponse> getAllByCategoryName(String categoryName, String order) {
+        List<Article> articles = articleServicePort.getAllByCategoryName(categoryName, order);
+        return articles.stream()
+                .map(articleResponseMapper::articleToArticleResponse)
+                .collect(Collectors.toList());
     }
 
 }

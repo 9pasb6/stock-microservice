@@ -7,7 +7,7 @@ import org.springframework.data.domain.Pageable;
 import java.util.List;
 
 public interface IBrandServicePort {
-    Page<Brand> findAll(Pageable pageable);
+    List<Brand> findAll(String order);
     Brand save(Brand brand);
     Brand findById(Long id);
     void delete(Long id);

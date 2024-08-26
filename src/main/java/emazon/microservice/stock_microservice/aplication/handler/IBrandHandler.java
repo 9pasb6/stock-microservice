@@ -3,6 +3,7 @@ package emazon.microservice.stock_microservice.aplication.handler;
 import emazon.microservice.stock_microservice.aplication.dto.request.BrandRequest;
 import emazon.microservice.stock_microservice.aplication.dto.response.ArticleResponse;
 import emazon.microservice.stock_microservice.aplication.dto.response.BrandResponse;
+import emazon.microservice.stock_microservice.domain.model.Brand;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -12,8 +13,8 @@ public interface IBrandHandler {
 
     void saveBrand(BrandRequest brandRequest);
 
-    Page<BrandResponse> getAllBrands(Pageable pageable);
-//    Page<ArticleResponse> getAllArticles();
+    List<BrandResponse> getAllBrands(String order);
+
 
     BrandResponse getBrand(Long brandId);
 

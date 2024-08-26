@@ -3,12 +3,10 @@ package emazon.microservice.stock_microservice.infraestructure.input.rest.contro
 import emazon.microservice.stock_microservice.aplication.dto.request.ArticleRequest;
 import emazon.microservice.stock_microservice.aplication.dto.response.ArticleResponse;
 import emazon.microservice.stock_microservice.aplication.handler.IArticleHandler;
-import emazon.microservice.stock_microservice.domain.model.Article;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -22,42 +20,85 @@ public class ArticleController {
 
     private final IArticleHandler articleHandler;
 
+    @Operation(summary = "Create a new article", description = "Allows an admin to create a new article with specified details.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "Article created successfully"),
+            @ApiResponse(responseCode = "400", description = "Invalid input")
+    })
     @PostMapping
     public ResponseEntity<Void> saveArticle(@RequestBody ArticleRequest articleRequest) {
-        System.out.println("Desde el controller: " + articleRequest);  // Cambiado de printf a println
         articleHandler.saveArticle(articleRequest);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
+    @Operation(summary = "Get all articles", description = "Retrieve a list of all articles, ordered as specified.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "List of articles retrieved successfully"),
+            @ApiResponse(responseCode = "500", description = "Internal server error")
+    })
     @GetMapping
-    public ResponseEntity<Page<ArticleResponse>> getAllArticles(
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size,
-            @RequestParam(defaultValue = "name") String sortBy,
-            @RequestParam(defaultValue = "asc") String direction) {
-
-        Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.fromString(direction), sortBy));
-        Page<ArticleResponse> articles = articleHandler.getAllArticles(pageable);
-
+    public ResponseEntity<List<ArticleResponse>> getAllArticles(
+            @RequestParam(defaultValue = "asc") String order) {
+        List<ArticleResponse> articles = articleHandler.getAllArticles(order);
         return ResponseEntity.ok(articles);
     }
 
-
+    @Operation(summary = "Get an article by ID", description = "Retrieve details of a specific article by its ID.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Article details retrieved successfully"),
+            @ApiResponse(responseCode = "404", description = "Article not found")
+    })
     @GetMapping("/{id}")
     public ResponseEntity<ArticleResponse> getArticle(@PathVariable Long id) {
         ArticleResponse article = articleHandler.getArticle(id);
         return ResponseEntity.ok(article);
     }
 
+    @Operation(summary = "Update an article", description = "Update the details of an existing article.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Article updated successfully"),
+            @ApiResponse(responseCode = "400", description = "Invalid input")
+    })
     @PutMapping("/{id}")
-    public ResponseEntity<Void> updateArticle( @RequestBody ArticleRequest articleRequest) {
+    public ResponseEntity<Void> updateArticle(@RequestBody ArticleRequest articleRequest) {
         articleHandler.updateArticle(articleRequest);
         return ResponseEntity.ok().build();
     }
 
+    @Operation(summary = "Delete an article", description = "Delete an article by its ID.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Article deleted successfully"),
+            @ApiResponse(responseCode = "404", description = "Article not found")
+    })
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteArticle(@PathVariable Long id) {
         articleHandler.deleteArticle(id);
         return ResponseEntity.ok().build();
+    }
+
+    @Operation(summary = "Get articles by brand", description = "Retrieve a list of articles by brand name, ordered as specified.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "List of articles retrieved successfully"),
+            @ApiResponse(responseCode = "400", description = "Invalid brand name")
+    })
+    @GetMapping("/brand")
+    public ResponseEntity<List<ArticleResponse>> getAllByBrandName(
+            @RequestParam String brandName,
+            @RequestParam(defaultValue = "asc") String order) {
+        List<ArticleResponse> articles = articleHandler.getAllByBrandName(brandName, order);
+        return ResponseEntity.ok(articles);
+    }
+
+    @Operation(summary = "Get articles by category", description = "Retrieve a list of articles by category name, ordered as specified.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "List of articles retrieved successfully"),
+            @ApiResponse(responseCode = "400", description = "Invalid category name")
+    })
+    @GetMapping("/category")
+    public ResponseEntity<List<ArticleResponse>> getAllByCategoryName(
+            @RequestParam String categoryName,
+            @RequestParam(defaultValue = "asc") String order) {
+        List<ArticleResponse> articles = articleHandler.getAllByCategoryName(categoryName, order);
+        return ResponseEntity.ok(articles);
     }
 }

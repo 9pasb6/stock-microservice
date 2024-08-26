@@ -2,12 +2,15 @@ package emazon.microservice.stock_microservice.infraestructure.output.rest.jpa.a
 
 import emazon.microservice.stock_microservice.domain.model.Category;
 import emazon.microservice.stock_microservice.domain.spi.ICategoryPersistencePort;
+import emazon.microservice.stock_microservice.infraestructure.output.rest.jpa.entity.BrandEntity;
 import emazon.microservice.stock_microservice.infraestructure.output.rest.jpa.entity.CategoryEntity;
 import emazon.microservice.stock_microservice.infraestructure.output.rest.jpa.mapper.ICategoryEntityMapper;
 import emazon.microservice.stock_microservice.infraestructure.output.rest.jpa.repository.CategoryRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -23,7 +26,7 @@ public class CategoryJpaAdapter implements ICategoryPersistencePort {
 
     @Override
     public Category save(Category category) {
-        System.out.println("Saving brand: " + category.getName());
+
         categoryRepository.save(categoryEntityMapper.categoryToCategoryEntity(category));
         return  categoryEntityMapper.categoryEntityToCategory(categoryRepository.save(categoryEntityMapper.categoryToCategoryEntity(category)));
 
@@ -55,8 +58,12 @@ public class CategoryJpaAdapter implements ICategoryPersistencePort {
     }
 
     @Override
-    public Page<Category> findAll(Pageable pageable) {
-        return categoryRepository.findAll(pageable).map(categoryEntityMapper::categoryEntityToCategory);
+    public List<Category> findAll(String order) {
+        Pageable pageable = createPageRequest(order);
+        Page<CategoryEntity> page = categoryRepository.findAll(pageable);
+        return page.stream()
+                .map(categoryEntityMapper::categoryEntityToCategory)
+                .collect(Collectors.toList());
     }
 
     @Override
@@ -95,5 +102,15 @@ public class CategoryJpaAdapter implements ICategoryPersistencePort {
     @Override
     public boolean existsByName(String name) {
         return categoryRepository.existsByName(name);
+    }
+
+    @Override
+    public boolean existByIds(Set<Long> ids) {
+        return categoryRepository.existsByIdIn(ids);
+    }
+
+    private Pageable createPageRequest(String order) {
+        Sort sort = "desc".equalsIgnoreCase(order) ? Sort.by("name").descending() : Sort.by("name").ascending();
+        return PageRequest.of(0, 10, sort);
     }
 }

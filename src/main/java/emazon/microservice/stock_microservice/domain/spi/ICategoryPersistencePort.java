@@ -10,18 +10,27 @@ import java.util.Set;
 public interface ICategoryPersistencePort {
 
     Category save(Category category);
+
     Category findByName(String name);
+
     void delete(Category category);
+
     Category update(Category category);
-    Page<Category> findAll(Pageable pageable);
+
+    List<Category> findAll(String order);
+
     Category findById(Long id);
+
     void deleteAll();
+
     void deleteById(Long id);
-    // Método para obtener categorías por sus IDs
+
     List<Category> getCategoriesByIds(Set<Long> ids);
 
-    // Método para obtener nombres de categorías por sus IDs
     Set<String> getCategoryNamesByIds(Set<Long> ids);
+
     boolean existsByName(String name);
+
+    boolean existByIds(Set<Long> ids);
 
 }

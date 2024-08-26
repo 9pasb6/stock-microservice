@@ -14,7 +14,7 @@ public interface ICategoryServicePort {
     Category findByName(String name);
     void delete(Category category);
     Category update(Category category);
-    Page<Category> findAll(Pageable pageable);
+    List<Category> findAll(String order);
     void deleteAll();
     void deleteById(Long id);
     // Método para obtener categorías por sus IDs

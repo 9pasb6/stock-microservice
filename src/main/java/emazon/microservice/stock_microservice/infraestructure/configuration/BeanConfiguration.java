@@ -41,8 +41,8 @@ public class BeanConfiguration {
     }
 
     @Bean
-    public IArticleServicePort articleServicePort(IArticlePersistencePort articlePersistencePort,ICategoryPersistencePort categoryPersistencePort, IBrandPersistencePort brandPersistencePort ) {
-        return new ArticleUseCase(articlePersistencePort, categoryPersistencePort, brandPersistencePort);
+    public IArticleServicePort articleServicePort(IArticlePersistencePort articlePersistencePort, IBrandPersistencePort brandPersistencePort, ICategoryPersistencePort categoryPersistencePort) {
+        return new ArticleUseCase(articlePersistencePort,  brandPersistencePort, categoryPersistencePort);
     }
 
     @Bean

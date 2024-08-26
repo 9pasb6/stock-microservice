@@ -57,10 +57,12 @@ public class CategoryHandler implements ICategoryHandler {
     }
 
     @Override
-    public Page<CategoryResponse> findAll(Pageable pageable) {
-        Page<Category> categories = categoryServicePort.findAll(pageable);
-        return categories.map(categoryResponseMapper::categoryToResponse);
+    public List<CategoryResponse> findAll(String order) {
+        List<Category> categories = categoryServicePort.findAll(order);
+        return categories.stream().map(categoryResponseMapper::categoryToResponse).collect(Collectors.toList());
     }
+
+
 
 
 

@@ -1,11 +1,10 @@
 package emazon.microservice.stock_microservice.domain.usecase;
 
 import emazon.microservice.stock_microservice.domain.api.ICategoryServicePort;
-import emazon.microservice.stock_microservice.domain.model.Brand;
+import emazon.microservice.stock_microservice.domain.exceptions.CategoryExceptions;
 import emazon.microservice.stock_microservice.domain.model.Category;
 import emazon.microservice.stock_microservice.domain.spi.ICategoryPersistencePort;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
+import emazon.microservice.stock_microservice.domain.util.ValidationUtils;
 
 import java.util.List;
 import java.util.Objects;
@@ -21,11 +20,10 @@ public class CategoryUseCase implements ICategoryServicePort {
 
     @Override
     public Category save(Category category) {
-        validateCategory(category); // Validar la categoría antes de guardar
+        ValidationUtils.validateCategory(category);
 
-        // Verificar si ya existe una categoría con el mismo nombre
         if (categoryPersistencePort.existsByName(category.getName())) {
-            throw new IllegalArgumentException("Category name already exists");
+            throw new CategoryExceptions.CategoryNameAlreadyExistsException("El nombre de la categoría ya existe");
         }
 
         return categoryPersistencePort.save(category);
@@ -33,7 +31,11 @@ public class CategoryUseCase implements ICategoryServicePort {
 
     @Override
     public Category findByName(String name) {
-        return categoryPersistencePort.findByName(name);
+        Category category = categoryPersistencePort.findByName(name);
+        if (category == null) {
+            throw new CategoryExceptions.CategoryNotFoundException("La categoría con nombre '" + name + "' no se encuentra");
+        }
+        return category;
     }
 
     @Override
@@ -43,25 +45,20 @@ public class CategoryUseCase implements ICategoryServicePort {
 
     @Override
     public Category update(Category category) {
-        validateCategory(category); // Validar la categoría antes de actualizar
+        ValidationUtils.validateCategory(category);
 
-        // Verificar si el nombre de la categoría se está cambiando y si ya existe otra categoría con el mismo nombre
         Category existingCategory = categoryPersistencePort.findById(category.getId());
         if (existingCategory != null && !Objects.equals(existingCategory.getName(), category.getName()) &&
                 categoryPersistencePort.existsByName(category.getName())) {
-            throw new IllegalArgumentException("Category name already exists");
+            throw new CategoryExceptions.CategoryNameAlreadyExistsException("El nombre de la categoría ya existe");
         }
 
         return categoryPersistencePort.update(category);
     }
 
     @Override
-    public Page<Category> findAll(Pageable pageable) {
-
-        Page<Category> categories = this.categoryPersistencePort.findAll(pageable);
-
-
-        return categories;
+    public List<Category> findAll(String order) {
+        return categoryPersistencePort.findAll(order);
     }
 
     @Override
@@ -82,21 +79,5 @@ public class CategoryUseCase implements ICategoryServicePort {
     @Override
     public Set<String> getCategoryNamesByIds(Set<Long> ids) {
         return categoryPersistencePort.getCategoryNamesByIds(ids);
-    }
-
-    // Método para validar la categoría
-    private void validateCategory(Category category) {
-        if (category.getName() == null || category.getName().isEmpty()) {
-            throw new IllegalArgumentException("Category name cannot be null or empty");
-        }
-        if (category.getDescription() == null || category.getDescription().isEmpty()) {
-            throw new IllegalArgumentException("Brand description cannot be null or empty");
-        }
-        if (category.getName().length() > 50) {
-            throw new IllegalArgumentException("Category name must be at most 50 characters long");
-        }
-        if (category.getDescription().length() > 90) {
-            throw new IllegalArgumentException("Brand description must be at most 90 characters long");
-        }
     }
 }

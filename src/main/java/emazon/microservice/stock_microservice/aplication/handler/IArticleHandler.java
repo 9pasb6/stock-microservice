@@ -14,12 +14,20 @@ public interface IArticleHandler {
 
     void saveArticle(ArticleRequest articleRequest);
 
-//    List<ArticleResponse> getAllArticles();
-    Page<ArticleResponse> getAllArticles(Pageable pageable);
+    List<ArticleResponse> getAllArticles(String order);
+
 
     ArticleResponse getArticle(Long id);
 
     void updateArticle(ArticleRequest articleRequest);
 
     void deleteArticle(Long id);
+
+    List<ArticleResponse> getAllByBrandName(String brandName, String order);
+
+    List<ArticleResponse> getAllByCategoryName(String categoryName, String order); // Nuevo método
+
+
+
+
 }

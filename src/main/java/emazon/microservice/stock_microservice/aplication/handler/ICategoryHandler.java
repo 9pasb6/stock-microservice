@@ -19,7 +19,7 @@ public interface ICategoryHandler {
 
     Category update(CategoryRequest categoryRequest);
 
-    Page<CategoryResponse> findAll(Pageable pageable);
+    List<CategoryResponse> findAll(String order);
 
     void deleteAll();
 

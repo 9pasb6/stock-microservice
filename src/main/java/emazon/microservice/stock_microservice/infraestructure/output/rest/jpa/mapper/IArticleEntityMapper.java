@@ -6,20 +6,11 @@ import emazon.microservice.stock_microservice.domain.model.Category;
 import emazon.microservice.stock_microservice.infraestructure.output.rest.jpa.entity.ArticleEntity;
 import emazon.microservice.stock_microservice.infraestructure.output.rest.jpa.entity.BrandEntity;
 import emazon.microservice.stock_microservice.infraestructure.output.rest.jpa.entity.CategoryEntity;
-import emazon.microservice.stock_microservice.infraestructure.output.rest.jpa.repository.BrandRepository;
-import emazon.microservice.stock_microservice.infraestructure.output.rest.jpa.repository.CategoryRepository;
 import org.mapstruct.*;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.List;
 import java.util.stream.Collectors;
-import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
-import org.mapstruct.Named;
-
-import java.util.HashSet;
-import java.util.Set;
 
 @Mapper(
         componentModel = "spring",
@@ -42,23 +33,23 @@ public interface IArticleEntityMapper {
     ArticleEntity articleToArticleEntity(Article article);
 
     @Named("categoryEntitiesToCategories")
-    default Set<Category> mapCategoryEntitiesToCategories(Set<CategoryEntity> categoryEntities) {
+    default List<Category> mapCategoryEntitiesToCategories(List<CategoryEntity> categoryEntities) {
         return categoryEntities.stream()
-                .map(categoryEntity -> new Category(categoryEntity.getId(), categoryEntity.getName(), categoryEntity.getDescription()))
-                .collect(Collectors.toSet());
+                .map(categoryEntity -> new Category(categoryEntity.getId(), categoryEntity.getName(), null))
+                .collect(Collectors.toList());
     }
 
     @Named("categoriesToCategoryEntities")
-    default Set<CategoryEntity> mapCategoriesToCategoryEntities(Set<Category> categories) {
+    default List<CategoryEntity> mapCategoriesToCategoryEntities(List<Category> categories) {
         return categories.stream()
                 .map(category -> {
                     CategoryEntity categoryEntity = new CategoryEntity();
                     categoryEntity.setId(category.getId());
                     categoryEntity.setName(category.getName());
-                    categoryEntity.setDescription(category.getDescription());
+                    categoryEntity.setDescription(null);
                     return categoryEntity;
                 })
-                .collect(Collectors.toSet());
+                .collect(Collectors.toList());
     }
 
     @Named("brandEntityToBrand")
@@ -66,7 +57,7 @@ public interface IArticleEntityMapper {
         if (brandEntity == null) {
             return null;
         }
-        return new Brand(brandEntity.getId(), brandEntity.getName(), brandEntity.getDescription()); // Asumiendo que Brand tiene un constructor con id y name
+        return new Brand(brandEntity.getId(), brandEntity.getName(), null);
     }
 
     @Named("brandToBrandEntity")
@@ -76,8 +67,7 @@ public interface IArticleEntityMapper {
         }
         BrandEntity brandEntity = new BrandEntity();
         brandEntity.setId(brand.getId());
-        brandEntity.setName(brand.getName());// Asumiendo que BrandEntity tiene un método setName()
-        brandEntity.setDescription(brand.getDescription());
+        brandEntity.setName(brand.getName());
         return brandEntity;
     }
 }

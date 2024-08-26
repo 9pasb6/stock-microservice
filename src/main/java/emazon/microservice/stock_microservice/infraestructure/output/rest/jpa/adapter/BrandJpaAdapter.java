@@ -1,16 +1,19 @@
 package emazon.microservice.stock_microservice.infraestructure.output.rest.jpa.adapter;
 
-import emazon.microservice.stock_microservice.domain.model.Article;
 import emazon.microservice.stock_microservice.domain.model.Brand;
 import emazon.microservice.stock_microservice.domain.spi.IBrandPersistencePort;
+import emazon.microservice.stock_microservice.infraestructure.output.rest.jpa.entity.BrandEntity;
 import emazon.microservice.stock_microservice.infraestructure.output.rest.jpa.mapper.IBrandEntityMapper;
 import emazon.microservice.stock_microservice.infraestructure.output.rest.jpa.repository.BrandRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Component
@@ -20,21 +23,23 @@ public class BrandJpaAdapter implements IBrandPersistencePort {
     private final IBrandEntityMapper brandEntityMapper;
 
     @Override
-    public Page<Brand> findAll(Pageable pageable) {
-        return brandRepository.findAll(pageable)
-                .map(brandEntityMapper::brandEntityToBrand);
+    public List<Brand> findAll(String order) {
+        Pageable pageable = createPageRequest(order);
+        Page<BrandEntity> page = brandRepository.findAll(pageable);
+        return page.stream()
+                .map(brandEntityMapper::brandEntityToBrand)
+                .collect(Collectors.toList());
     }
-
 
     @Override
     public Brand save(Brand brand) {
-        System.out.println("Saving brand: " + brand.getName());
-        return brandEntityMapper.brandEntityToBrand(brandRepository.save(brandEntityMapper.brandToBrandEntity(brand)));
+        return brandEntityMapper.brandEntityToBrand(
+                brandRepository.save(brandEntityMapper.brandToBrandEntity(brand))
+        );
     }
 
     @Override
     public Brand findById(Long id) {
-
         return brandRepository.findById(id)
                 .map(brandEntityMapper::brandEntityToBrand)
                 .orElse(null);
@@ -71,5 +76,13 @@ public class BrandJpaAdapter implements IBrandPersistencePort {
         return brandRepository.existsByName(name);
     }
 
+    @Override
+    public boolean existsById(Long id) {
+        return brandRepository.existsById(id);
+    }
 
+    private Pageable createPageRequest(String order) {
+        Sort sort = "desc".equalsIgnoreCase(order) ? Sort.by("name").descending() : Sort.by("name").ascending();
+        return PageRequest.of(0, 10, sort);
+    }
 }

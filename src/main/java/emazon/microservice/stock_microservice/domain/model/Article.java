@@ -1,7 +1,7 @@
 package emazon.microservice.stock_microservice.domain.model;
 
 import java.math.BigDecimal;
-import java.util.Set;
+import java.util.List;
 
 public class Article {
 
@@ -12,8 +12,8 @@ public class Article {
     private String description;
     private BigDecimal price;
     private Integer stockQuantity;
-    private Brand brand; // Cambiado de Long a Brand
-    private Set<Category> categories; // Cambiado de Set<Long> a Set<Category>
+    private Brand brand;
+    private List<Category> categories;
 
     @Override
     public String toString() {
@@ -26,6 +26,10 @@ public class Article {
                 ", brand=" + brand +
                 ", categories=" + categories +
                 '}';
+    }
+
+    public Article() {
+
     }
 
     public Long getId() {
@@ -76,15 +80,23 @@ public class Article {
         this.brand = brand;
     }
 
-    public Set<Category> getCategories() {
+    public List<Category> getCategories() {
         return categories;
     }
 
-    public void setCategories(Set<Category> categories) {
+    public void setCategories(List<Category> categories) {
         this.categories = categories;
     }
 
-    public Article(Long id, String name, String description, BigDecimal price, Integer stockQuantity, Brand brand, Set<Category> categories) {
+    public Article(
+            Long id,
+            String name,
+            String description,
+            BigDecimal price,
+            Integer stockQuantity,
+            Brand brand,
+            List<Category> categories
+    ) {
         this.id = id;
         this.name = name;
         this.description = description;
@@ -92,5 +104,14 @@ public class Article {
         this.stockQuantity = stockQuantity;
         this.brand = brand;
         this.categories = categories;
+    }
+
+    public Long getBrandId() {
+        return brand != null ? brand.getId() : null;
+    }
+
+
+    public void setBrandId(long l) {
+        this.brand = new Brand();
     }
 }

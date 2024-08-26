@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 
+import java.util.List;
 import java.util.Set;
 @Entity
 @Table(name = "categories")
@@ -26,5 +27,5 @@ public class CategoryEntity {
             name = "article_category",
             joinColumns = @JoinColumn(name = "category_id"),
             inverseJoinColumns = @JoinColumn(name = "article_id"))
-    private Set<ArticleEntity> articles;
+    private List<ArticleEntity> articles;
 }
