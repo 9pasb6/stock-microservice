@@ -41,7 +41,6 @@ class ArticleUseCaseTest {
         MockitoAnnotations.openMocks(this);
     }
 
-    // Validaciones
 
     @Test
     void testSaveArticle_ArticleNameAlreadyExistsException() {
@@ -65,7 +64,7 @@ class ArticleUseCaseTest {
                 ArticleExceptions.ArticleNameAlreadyExistsException.class,
                 () -> articleUseCase.saveArticle(article)
         );
-        assertEquals("El nombre del artículo ya existe", exception.getMessage());
+        assertEquals("The article name already exists.", exception.getMessage());
     }
 
     @Test
@@ -97,7 +96,7 @@ class ArticleUseCaseTest {
                 () -> ValidationUtils.validateArticle(article)
         );
 
-        assertEquals("El artículo debe tener entre 1 y 3 categorías", exception.getMessage());
+        assertEquals("The article must have between 1 and 3 categories.", exception.getMessage());
     }
 
     @Test
@@ -123,7 +122,7 @@ class ArticleUseCaseTest {
                 () -> ValidationUtils.validateArticle(article)
         );
 
-        assertEquals("El artículo debe tener entre 1 y 3 categorías", exception.getMessage());
+        assertEquals("The article must have between 1 and 3 categories.", exception.getMessage());
     }
 
     @Test
@@ -146,7 +145,7 @@ class ArticleUseCaseTest {
                 () -> articleUseCase.saveArticle(article)
         );
 
-        assertEquals("El artículo no puede tener categorías repetidas", exception.getMessage());
+        assertEquals("The article cannot have duplicate categories.", exception.getMessage());
     }
 
     @Test
@@ -157,7 +156,7 @@ class ArticleUseCaseTest {
                 ArticleExceptions.BrandNotFoundException.class,
                 () -> articleUseCase.getAllByBrandName("NonExistentBrand", "asc")
         );
-        assertEquals("La marca 'NonExistentBrand' no existe.", exception.getMessage());
+        assertEquals("The brand 'NonExistentBrand' does not exist.", exception.getMessage());
     }
 
     @Test
@@ -168,7 +167,7 @@ class ArticleUseCaseTest {
                 ArticleExceptions.CategoryNotFoundException.class,
                 () -> articleUseCase.getAllByCategoryName("NonExistentCategory", "asc")
         );
-        assertEquals("La categoría 'NonExistentCategory' no existe.", exception.getMessage());
+        assertEquals("The category 'NonExistentCategory' does not exist.", exception.getMessage());
     }
 
     // CRUD
@@ -220,7 +219,7 @@ class ArticleUseCaseTest {
                 ArticleExceptions.ArticleNameAlreadyExistsException.class,
                 () -> articleUseCase.updateArticle(article)
         );
-        assertEquals("El nombre del artículo ya existe", exception.getMessage());
+        assertEquals("The article name already exists.", exception.getMessage());
     }
 
     @Test

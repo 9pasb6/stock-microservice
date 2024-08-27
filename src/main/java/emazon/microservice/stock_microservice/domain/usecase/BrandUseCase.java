@@ -17,33 +17,37 @@ public class BrandUseCase implements IBrandServicePort {
         this.brandPersistencePort = brandPersistencePort;
     }
 
-    @Override
-    public List<Brand> findAll(String order) {
-        return this.brandPersistencePort.findAll(order);
-    }
 
     @Override
     public Brand save(Brand brand) {
         ValidationUtils.validateBrand(brand);
 
         if (brandPersistencePort.existsByName(brand.getName())) {
-            throw new BrandExceptions.BrandNameAlreadyExistsException("El nombre de la marca ya existe");
+            throw new BrandExceptions.BrandNameAlreadyExistsException("The brand name already exists.");
         }
 
         return brandPersistencePort.save(brand);
     }
 
     @Override
+    public List<Brand> findAll(String order) {
+        return this.brandPersistencePort.findAll(order);
+    }
+
+    @Override
     public Brand findById(Long id) {
         Brand brand = brandPersistencePort.findById(id);
         if (brand == null) {
-            throw new BrandExceptions.BrandNotFoundException("La marca con ID " + id + " no se encuentra");
+            throw new BrandExceptions.BrandNotFoundException("The brand with ID " + id + " was not found.");
         }
         return brand;
     }
 
     @Override
     public void delete(Long id) {
+        if (!brandPersistencePort.existsById(id)) {
+            throw new BrandExceptions.BrandNotFoundException("The brand with ID " + id + " was not found.");
+        }
         brandPersistencePort.delete(id);
     }
 
@@ -57,9 +61,13 @@ public class BrandUseCase implements IBrandServicePort {
         ValidationUtils.validateBrand(brand);
 
         Brand existingBrand = brandPersistencePort.findById(brand.getId());
-        if (existingBrand != null && !Objects.equals(existingBrand.getName(), brand.getName()) &&
+        if (existingBrand == null) {
+            throw new BrandExceptions.BrandNotFoundException("The brand with ID " + brand.getId() + " was not found.");
+        }
+
+        if (!Objects.equals(existingBrand.getName(), brand.getName()) &&
                 brandPersistencePort.existsByName(brand.getName())) {
-            throw new BrandExceptions.BrandNameAlreadyExistsException("El nombre de la marca ya existe");
+            throw new BrandExceptions.BrandNameAlreadyExistsException("The brand name already exists.");
         }
 
         brandPersistencePort.update(brand);
@@ -69,7 +77,7 @@ public class BrandUseCase implements IBrandServicePort {
     public Brand getBrandByName(String name) {
         Brand brand = brandPersistencePort.getBrandByName(name);
         if (brand == null) {
-            throw new BrandExceptions.BrandNotFoundException("La marca con nombre '" + name + "' no se encuentra");
+            throw new BrandExceptions.BrandNotFoundException("The brand with name '" + name + "' was not found.");
         }
         return brand;
     }

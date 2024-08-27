@@ -1,6 +1,14 @@
 package emazon.microservice.stock_microservice.domain.model;
 
 public class Brand {
+    @Override
+    public String toString() {
+        return "Brand{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", description='" + description + '\'' +
+                '}';
+    }
 
     private Long id;
     private String name;

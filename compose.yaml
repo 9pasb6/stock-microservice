@@ -10,7 +10,7 @@ services:
       MYSQL_USER: user
       MYSQL_PASSWORD: userpassword
     ports:
-      - "3307:3306" # Puerto para conectar la base de datos
+      - "3307:3306"
     networks:
       - stock-network
 
@@ -18,7 +18,7 @@ services:
     image: phpmyadmin/phpmyadmin
     container_name: phpmyadmin
     ports:
-      - "8081:80" # Puerto para acceder a phpMyAdmin
+      - "8081:80"
     environment:
       PMA_HOST: mysql
       PMA_PORT: 3306

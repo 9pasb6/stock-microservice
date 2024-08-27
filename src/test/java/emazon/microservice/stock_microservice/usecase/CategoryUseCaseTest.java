@@ -1,6 +1,5 @@
 package emazon.microservice.stock_microservice.usecase;
 
-
 import emazon.microservice.stock_microservice.domain.exceptions.CategoryExceptions;
 import emazon.microservice.stock_microservice.domain.model.Category;
 import emazon.microservice.stock_microservice.domain.spi.ICategoryPersistencePort;
@@ -32,8 +31,6 @@ class CategoryUseCaseTest {
         MockitoAnnotations.openMocks(this);
     }
 
-    // Validaciones
-
     @Test
     void testSaveCategory_NameAlreadyExistsException() {
         Category category = new Category();
@@ -46,7 +43,7 @@ class CategoryUseCaseTest {
                 CategoryExceptions.CategoryNameAlreadyExistsException.class,
                 () -> categoryUseCase.save(category)
         );
-        assertEquals("El nombre de la categoría ya existe", exception.getMessage());
+        assertEquals("The category name already exists.", exception.getMessage());
     }
 
     @Test
@@ -72,7 +69,7 @@ class CategoryUseCaseTest {
     @Test
     void testSaveCategory_ThrowsExceptionWhenNameIsTooLong() {
         Category category = new Category();
-        category.setName("A".repeat(51)); // 51 characters
+        category.setName("A".repeat(51));
         category.setDescription("Description");
 
         assertThrows(IllegalArgumentException.class, () -> {
@@ -84,7 +81,7 @@ class CategoryUseCaseTest {
     void testSaveCategory_ThrowsExceptionWhenDescriptionIsTooLong() {
         Category category = new Category();
         category.setName("New Category");
-        category.setDescription("A".repeat(91)); // 91 characters
+        category.setDescription("A".repeat(91));
 
         assertThrows(IllegalArgumentException.class, () -> {
             categoryUseCase.save(category);
@@ -108,7 +105,7 @@ class CategoryUseCaseTest {
                 CategoryExceptions.CategoryNameAlreadyExistsException.class,
                 () -> categoryUseCase.update(category)
         );
-        assertEquals("El nombre de la categoría ya existe", exception.getMessage());
+        assertEquals("The category name already exists.", exception.getMessage());
     }
 
     @Test
@@ -127,8 +124,6 @@ class CategoryUseCaseTest {
         categoryUseCase.update(category);
         verify(categoryPersistencePort, times(1)).update(category);
     }
-
-    // CRUD
 
     @Test
     void testFindAllCategories() {
@@ -158,7 +153,7 @@ class CategoryUseCaseTest {
                 CategoryExceptions.CategoryNotFoundException.class,
                 () -> categoryUseCase.findByName("NonExistentCategory")
         );
-        assertEquals("La categoría con nombre 'NonExistentCategory' no se encuentra", exception.getMessage());
+        assertEquals("The category with name 'NonExistentCategory' was not found.", exception.getMessage());
     }
 
     @Test
@@ -183,16 +178,18 @@ class CategoryUseCaseTest {
     }
 
     @Test
-    void testGetCategoriesByIds() {
+    void testGetCategoriesByIds_PartialFailure() {
         Set<Long> ids = new HashSet<>();
         ids.add(1L);
         ids.add(2L);
 
-        List<Category> categories = new ArrayList<>();
-        when(categoryPersistencePort.getCategoriesByIds(ids)).thenReturn(categories);
+        when(categoryPersistencePort.getCategoriesByIds(ids)).thenReturn(new ArrayList<>());
 
-        List<Category> result = categoryUseCase.getCategoriesByIds(ids);
-        assertEquals(categories, result);
+        Exception exception = assertThrows(CategoryExceptions.CategoryNotFoundException.class, () -> {
+            categoryUseCase.getCategoriesByIds(ids);
+        });
+
+        assertEquals("Categories not found for IDs: [1, 2]", exception.getMessage());
     }
 
     @Test

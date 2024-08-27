@@ -31,7 +31,6 @@ class BrandUseCaseTest {
         MockitoAnnotations.openMocks(this);
     }
 
-    // Validaciones
 
     @Test
     void testSaveBrand_NameAlreadyExistsException() {
@@ -45,7 +44,7 @@ class BrandUseCaseTest {
                 BrandExceptions.BrandNameAlreadyExistsException.class,
                 () -> brandUseCase.save(brand)
         );
-        assertEquals("El nombre de la marca ya existe", exception.getMessage());
+        assertEquals("The brand name already exists.", exception.getMessage());
     }
 
     @Test
@@ -107,7 +106,7 @@ class BrandUseCaseTest {
                 BrandExceptions.BrandNameAlreadyExistsException.class,
                 () -> brandUseCase.update(brand)
         );
-        assertEquals("El nombre de la marca ya existe", exception.getMessage());
+        assertEquals("The brand name already exists.", exception.getMessage());
     }
 
     @Test
@@ -157,7 +156,7 @@ class BrandUseCaseTest {
                 BrandExceptions.BrandNotFoundException.class,
                 () -> brandUseCase.findById(1L)
         );
-        assertEquals("La marca con ID 1 no se encuentra", exception.getMessage());
+        assertEquals("The brand with ID 1 was not found.", exception.getMessage());
     }
 
     @Test
@@ -180,7 +179,7 @@ class BrandUseCaseTest {
                 BrandExceptions.BrandNotFoundException.class,
                 () -> brandUseCase.getBrandByName("NonExistentBrand")
         );
-        assertEquals("La marca con nombre 'NonExistentBrand' no se encuentra", exception.getMessage());
+        assertEquals("The brand with name 'NonExistentBrand' was not found.", exception.getMessage());
     }
 
     @Test

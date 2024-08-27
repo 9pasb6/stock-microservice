@@ -50,8 +50,9 @@ public class ArticleHandler implements IArticleHandler {
     }
 
     @Override
-    public void deleteArticle(Long id) {
+    public boolean deleteArticle(Long id) {
         articleServicePort.deleteArticle(id);
+        return false;
     }
 
     @Override
