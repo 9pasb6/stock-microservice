@@ -113,5 +113,6 @@ public class Article {
 
     public void setBrandId(long l) {
         this.brand = new Brand();
+        this.brand.setId(l);
     }
 }

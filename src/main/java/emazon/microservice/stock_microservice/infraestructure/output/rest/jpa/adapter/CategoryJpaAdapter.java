@@ -109,6 +109,11 @@ public class CategoryJpaAdapter implements ICategoryPersistencePort {
         return categoryRepository.existsByIdIn(ids);
     }
 
+    @Override
+    public boolean existsById(Long id) {
+        return categoryRepository.existsById(id);
+    }
+
     private Pageable createPageRequest(String order) {
         Sort sort = "desc".equalsIgnoreCase(order) ? Sort.by("name").descending() : Sort.by("name").ascending();
         return PageRequest.of(0, 10, sort);

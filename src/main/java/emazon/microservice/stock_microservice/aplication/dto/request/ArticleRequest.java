@@ -1,9 +1,6 @@
 package emazon.microservice.stock_microservice.aplication.dto.request;
 
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
-import lombok.AllArgsConstructor;
+import lombok.*;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -12,6 +9,7 @@ import java.util.List;
 @Setter
 @ToString
 @AllArgsConstructor
+@NoArgsConstructor
 public class ArticleRequest {
 
     private String name;
@@ -20,4 +18,6 @@ public class ArticleRequest {
     private Integer stockQuantity;
     private Long brandId;
     private List<Long> categoryIds;
+
+
 }

@@ -6,11 +6,8 @@ import emazon.microservice.stock_microservice.aplication.handler.IBrandHandler;
 import emazon.microservice.stock_microservice.aplication.mapper.request.BrandRequestMapper;
 import emazon.microservice.stock_microservice.aplication.mapper.response.BrandResponseMapper;
 import emazon.microservice.stock_microservice.domain.api.IBrandServicePort;
-import emazon.microservice.stock_microservice.domain.model.Article;
 import emazon.microservice.stock_microservice.domain.model.Brand;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -50,13 +47,15 @@ public class BrandHandler implements IBrandHandler {
     }
 
     @Override
-    public void updateBrand(BrandRequest brandRequest) {
+    public boolean updateBrand(BrandRequest brandRequest) {
         Brand brand = brandRequestMapper.requestToBrand(brandRequest);
         brandServicePort.update(brand);
+        return false;
     }
 
     @Override
-    public void deleteBrand(Long brandId) {
+    public boolean deleteBrand(Long brandId) {
         brandServicePort.delete(brandId);
+        return false;
     }
 }

@@ -1,26 +1,21 @@
 package emazon.microservice.stock_microservice.aplication.handler.impl;
 
 import emazon.microservice.stock_microservice.aplication.dto.request.CategoryRequest;
-import emazon.microservice.stock_microservice.aplication.dto.response.BrandResponse;
 import emazon.microservice.stock_microservice.aplication.dto.response.CategoryResponse;
 import emazon.microservice.stock_microservice.aplication.handler.ICategoryHandler;
 import emazon.microservice.stock_microservice.aplication.mapper.request.CategoryRequestMapper;
 import emazon.microservice.stock_microservice.aplication.mapper.response.CategoryResponseMapper;
 import emazon.microservice.stock_microservice.domain.api.ICategoryServicePort;
-import emazon.microservice.stock_microservice.domain.model.Brand;
 import emazon.microservice.stock_microservice.domain.model.Category;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
-import java.util.List;
 import java.util.Set;
-import java.util.stream.Collectors;
+
 
 @Service
 @RequiredArgsConstructor
@@ -62,18 +57,15 @@ public class CategoryHandler implements ICategoryHandler {
         return categories.stream().map(categoryResponseMapper::categoryToResponse).collect(Collectors.toList());
     }
 
-
-
-
-
     @Override
     public void deleteAll() {
         categoryServicePort.deleteAll();
     }
 
     @Override
-    public void deleteById(Long id) {
+    public boolean deleteById(Long id) {
         categoryServicePort.deleteById(id);
+        return false;
     }
 
     @Override

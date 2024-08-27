@@ -24,15 +24,15 @@ public class ArticleUseCase implements IArticleServicePort {
     }
 
     public void saveArticle(Article article) {
-
         ValidationUtils.validateArticle(article);
 
         if (articlePersistencePort.existsByName(article.getName())) {
-            throw new ArticleExceptions.ArticleNameAlreadyExistsException("El nombre del artículo ya existe");
+            throw new ArticleExceptions.ArticleNameAlreadyExistsException("The article name already exists.");
         }
 
         this.articlePersistencePort.saveArticle(article);
     }
+
     @Override
     public List<Article> getAllArticles(String order) {
         return this.articlePersistencePort.getAllArticles(order);
@@ -40,7 +40,11 @@ public class ArticleUseCase implements IArticleServicePort {
 
     @Override
     public Article getArticle(Long articleId) {
-        return this.articlePersistencePort.getArticle(articleId);
+        Article article = this.articlePersistencePort.getArticle(articleId);
+        if (article == null) {
+            throw new ArticleExceptions.ArticleNotFoundException("Article not found with ID: " + articleId);
+        }
+        return article;
     }
 
     @Override
@@ -51,20 +55,24 @@ public class ArticleUseCase implements IArticleServicePort {
 
         if (existingArticle != null && !existingArticle.getName().equals(article.getName()) &&
                 articlePersistencePort.existsByName(article.getName())) {
-            throw new ArticleExceptions.ArticleNameAlreadyExistsException("El nombre del artículo ya existe");
+            throw new ArticleExceptions.ArticleNameAlreadyExistsException("The article name already exists.");
         }
         this.articlePersistencePort.updateArticle(article);
     }
 
     @Override
     public void deleteArticle(Long articleId) {
+        Article article = this.articlePersistencePort.getArticle(articleId);
+        if (article == null) {
+            throw new ArticleExceptions.ArticleNotFoundException("Article not found with ID: " + articleId);
+        }
         this.articlePersistencePort.deleteArticle(articleId);
     }
 
     @Override
     public List<Article> getAllByBrandName(String brandName, String order) {
         if (!brandPersistencePort.existsByName(brandName)) {
-            throw new ArticleExceptions.BrandNotFoundException("La marca '" + brandName + "' no existe.");
+            throw new ArticleExceptions.BrandNotFoundException("The brand '" + brandName + "' does not exist.");
         }
         return this.articlePersistencePort.findAllByBrandName(brandName, order);
     }
@@ -72,7 +80,7 @@ public class ArticleUseCase implements IArticleServicePort {
     @Override
     public List<Article> getAllByCategoryName(String categoryName, String order) {
         if (!categoryPersistencePort.existsByName(categoryName)) {
-            throw new ArticleExceptions.CategoryNotFoundException("La categoría '" + categoryName + "' no existe.");
+            throw new ArticleExceptions.CategoryNotFoundException("The category '" + categoryName + "' does not exist.");
         }
         return this.articlePersistencePort.findAllByCategoryName(categoryName, order);
     }

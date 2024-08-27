@@ -33,4 +33,5 @@ public interface ICategoryPersistencePort {
 
     boolean existByIds(Set<Long> ids);
 
+    boolean existsById(Long id);
 }
