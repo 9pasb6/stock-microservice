@@ -43,10 +43,6 @@ public class CategoryJpaAdapter implements ICategoryPersistencePort {
                 .orElse(null);
     }
 
-    @Override
-    public void delete(Category category) {
-        categoryRepository.delete(categoryEntityMapper.categoryToCategoryEntity(category));
-    }
 
     @Override
     public Category update(Category category) {

@@ -71,18 +71,7 @@ class CategoryHandlerTest {
         assertEquals(categoryResponse, result);
     }
 
-    @Test
-    void testDelete() {
-        CategoryRequest categoryRequest = new CategoryRequest();
-        Category category = new Category();
 
-        when(categoryRequestMapper.requestToCategory(any(CategoryRequest.class))).thenReturn(category);
-
-        categoryHandler.delete(categoryRequest);
-
-        verify(categoryRequestMapper, times(1)).requestToCategory(categoryRequest);
-        verify(categoryServicePort, times(1)).delete(category);
-    }
 
     @Test
     void testUpdate() {
