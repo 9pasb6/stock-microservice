@@ -2,7 +2,6 @@ package emazon.microservice.stock_microservice.infraestructure.output.rest.jpa.a
 
 import emazon.microservice.stock_microservice.domain.model.Category;
 import emazon.microservice.stock_microservice.domain.spi.ICategoryPersistencePort;
-import emazon.microservice.stock_microservice.infraestructure.output.rest.jpa.entity.BrandEntity;
 import emazon.microservice.stock_microservice.infraestructure.output.rest.jpa.entity.CategoryEntity;
 import emazon.microservice.stock_microservice.infraestructure.output.rest.jpa.mapper.ICategoryEntityMapper;
 import emazon.microservice.stock_microservice.infraestructure.output.rest.jpa.repository.CategoryRepository;
@@ -43,10 +42,6 @@ public class CategoryJpaAdapter implements ICategoryPersistencePort {
                 .orElse(null);
     }
 
-    @Override
-    public void delete(Category category) {
-        categoryRepository.delete(categoryEntityMapper.categoryToCategoryEntity(category));
-    }
 
     @Override
     public Category update(Category category) {
@@ -62,8 +57,7 @@ public class CategoryJpaAdapter implements ICategoryPersistencePort {
         Pageable pageable = createPageRequest(order);
         Page<CategoryEntity> page = categoryRepository.findAll(pageable);
         return page.stream()
-                .map(categoryEntityMapper::categoryEntityToCategory)
-                .collect(Collectors.toList());
+                .map(categoryEntityMapper::categoryEntityToCategory).toList();
     }
 
     @Override
@@ -87,15 +81,14 @@ public class CategoryJpaAdapter implements ICategoryPersistencePort {
     public List<Category> getCategoriesByIds(Set<Long> ids) {
         return categoryRepository.findAllById(ids)
                 .stream()
-                .map(categoryEntityMapper::categoryEntityToCategory)
-                .collect(Collectors.toList());
+                .map(categoryEntityMapper::categoryEntityToCategory).toList();
     }
 
     @Override
     public Set<String> getCategoryNamesByIds(Set<Long> ids) {
         return categoryRepository.findAllById(ids)
                 .stream()
-                .map(CategoryEntity::getName) // Aquí CategoryEntity es la clase y getName es el método de instancia
+                .map(CategoryEntity::getName)
                 .collect(Collectors.toSet());
     }
 

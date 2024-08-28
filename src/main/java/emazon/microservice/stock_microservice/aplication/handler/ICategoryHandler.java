@@ -13,8 +13,6 @@ public interface ICategoryHandler {
 
     CategoryResponse findByName(String name);
 
-    void delete(CategoryRequest categoryRequest);
-
     Category update(CategoryRequest categoryRequest);
 
     List<CategoryResponse> findAll(String order);

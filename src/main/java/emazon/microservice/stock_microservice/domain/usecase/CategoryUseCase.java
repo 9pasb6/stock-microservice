@@ -9,7 +9,6 @@ import emazon.microservice.stock_microservice.domain.util.ValidationUtils;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 public class CategoryUseCase implements ICategoryServicePort {
 
@@ -37,11 +36,6 @@ public class CategoryUseCase implements ICategoryServicePort {
             throw new CategoryExceptions.CategoryNotFoundException("The category with name '" + name + "' was not found.");
         }
         return category;
-    }
-
-    @Override
-    public void delete(Category category) {
-        categoryPersistencePort.delete(category);
     }
 
     @Override

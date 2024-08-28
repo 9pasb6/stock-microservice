@@ -12,10 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.stream.Collectors;
-
 import java.util.Set;
-
 
 @Service
 @RequiredArgsConstructor
@@ -28,7 +25,6 @@ public class CategoryHandler implements ICategoryHandler {
 
     @Override
     public Category save(CategoryRequest categoryRequest) {
-        System.out.println("categoryRequest = " + categoryRequest);
         Category category = categoryRequestMapper.requestToCategory(categoryRequest);
         return categoryServicePort.save(category);
     }
@@ -40,12 +36,6 @@ public class CategoryHandler implements ICategoryHandler {
     }
 
     @Override
-    public void delete(CategoryRequest categoryRequest) {
-        Category category = categoryRequestMapper.requestToCategory(categoryRequest);
-        categoryServicePort.delete(category);
-    }
-
-    @Override
     public Category update(CategoryRequest categoryRequest) {
         Category category = categoryRequestMapper.requestToCategory(categoryRequest);
         return categoryServicePort.update(category);
@@ -54,7 +44,9 @@ public class CategoryHandler implements ICategoryHandler {
     @Override
     public List<CategoryResponse> findAll(String order) {
         List<Category> categories = categoryServicePort.findAll(order);
-        return categories.stream().map(categoryResponseMapper::categoryToResponse).collect(Collectors.toList());
+        return categories.stream()
+                .map(categoryResponseMapper::categoryToResponse)
+                .toList();
     }
 
     @Override
@@ -73,7 +65,7 @@ public class CategoryHandler implements ICategoryHandler {
         List<Category> categories = categoryServicePort.getCategoriesByIds(ids);
         return categories.stream()
                 .map(categoryResponseMapper::categoryToResponse)
-                .collect(Collectors.toList());
+                .toList();
     }
 
     @Override

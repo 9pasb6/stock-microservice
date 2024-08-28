@@ -157,15 +157,6 @@ class CategoryUseCaseTest {
     }
 
     @Test
-    void testDeleteCategory() {
-        Category category = new Category();
-        category.setId(1L);
-
-        categoryUseCase.delete(category);
-        verify(categoryPersistencePort, times(1)).delete(category);
-    }
-
-    @Test
     void testDeleteAllCategories() {
         categoryUseCase.deleteAll();
         verify(categoryPersistencePort, times(1)).deleteAll();
@@ -173,6 +164,8 @@ class CategoryUseCaseTest {
 
     @Test
     void testDeleteCategoryById() {
+
+        when(categoryPersistencePort.existsById(1L)).thenReturn(true);
         categoryUseCase.deleteById(1L);
         verify(categoryPersistencePort, times(1)).deleteById(1L);
     }
