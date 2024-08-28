@@ -40,11 +40,6 @@ public class CategoryUseCase implements ICategoryServicePort {
     }
 
     @Override
-    public void delete(Category category) {
-        categoryPersistencePort.delete(category);
-    }
-
-    @Override
     public Category update(Category category) {
         ValidationUtils.validateCategory(category);
 

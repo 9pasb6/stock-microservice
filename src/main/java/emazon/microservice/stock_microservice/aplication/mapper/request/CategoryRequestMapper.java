@@ -13,6 +13,8 @@ public interface CategoryRequestMapper {
 
     @Mapping(source = "name", target = "name")
     @Mapping(source = "description", target = "description")
+    @Mapping(target = "id", ignore = true)
+    @Mapping(target = "articleIds", ignore = true)
     Category requestToCategory(CategoryRequest categoryRequest);
 
 

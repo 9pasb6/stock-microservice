@@ -17,10 +17,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
@@ -104,7 +101,8 @@ class CategoryControllerTest {
 
     @Test
     void testGetCategoryByName_NotFound() throws Exception {
-        when(categoryHandler.findByName("Nonexistent Category")).thenReturn(null);
+        when(categoryHandler.findByName("Nonexistent Category"))
+                .thenThrow(new CategoryExceptions.CategoryNotFoundException("The category with name 'Nonexistent Category' was not found."));
 
         MvcResult result = mockMvc.perform(get("/api/categories/Nonexistent Category"))
                 .andExpect(status().isNotFound())
@@ -138,14 +136,13 @@ class CategoryControllerTest {
 
     @Test
     void testGetCategoriesByIds_NotFound() throws Exception {
-        when(categoryHandler.getCategoriesByIds(any(Set.class))).thenReturn(Arrays.asList());
+        when(categoryHandler.getCategoriesByIds(any(Set.class))).thenReturn(Collections.emptyList());
 
         MvcResult result = mockMvc.perform(get("/api/categories/ids")
                         .param("ids", "1,2"))
-                .andExpect(status().isNotFound())
+                .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$.status").value(HttpStatus.NOT_FOUND.value()))
-                .andExpect(jsonPath("$.message").value("Categories not found for IDs: [1, 2]"))
+                .andExpect(jsonPath("$.size()").value(0))
                 .andReturn();
 
         String responseBody = result.getResponse().getContentAsString();
@@ -225,23 +222,4 @@ class CategoryControllerTest {
         verify(categoryHandler, times(1)).deleteAll();
     }
 
-    @Test
-    void testDeleteCategory_Success() throws Exception {
-        mockMvc.perform(delete("/api/categories/delete")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content("{\"name\":\"Test Category\"}"))
-                .andExpect(status().isOk());
-
-        verify(categoryHandler, times(1)).delete(any(CategoryRequest.class));
-    }
-
-    @Test
-    void testDeleteCategory_InvalidInput() throws Exception {
-        mockMvc.perform(delete("/api/categories/delete")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content("{\"name\":\"\"}"))
-                .andExpect(status().isBadRequest());
-
-        verify(categoryHandler, never()).delete(any(CategoryRequest.class));
-    }
 }

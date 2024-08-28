@@ -13,8 +13,6 @@ public interface ICategoryPersistencePort {
 
     Category findByName(String name);
 
-    void delete(Category category);
-
     Category update(Category category);
 
     List<Category> findAll(String order);

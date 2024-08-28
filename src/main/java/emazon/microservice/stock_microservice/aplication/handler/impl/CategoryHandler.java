@@ -39,11 +39,7 @@ public class CategoryHandler implements ICategoryHandler {
         return categoryResponseMapper.categoryToResponse(category);
     }
 
-    @Override
-    public void delete(CategoryRequest categoryRequest) {
-        Category category = categoryRequestMapper.requestToCategory(categoryRequest);
-        categoryServicePort.delete(category);
-    }
+
 
     @Override
     public Category update(CategoryRequest categoryRequest) {

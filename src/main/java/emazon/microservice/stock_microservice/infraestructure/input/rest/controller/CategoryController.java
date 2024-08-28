@@ -4,14 +4,17 @@ import emazon.microservice.stock_microservice.aplication.dto.request.CategoryReq
 import emazon.microservice.stock_microservice.aplication.dto.response.CategoryResponse;
 import emazon.microservice.stock_microservice.aplication.handler.ICategoryHandler;
 
+import emazon.microservice.stock_microservice.domain.exceptions.CategoryExceptions;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
@@ -29,6 +32,9 @@ public class CategoryController {
             @ApiResponse(responseCode = "400", description = "Invalid input")
     })
     public ResponseEntity<Void> saveCategory(@RequestBody CategoryRequest categoryRequest) {
+        if (categoryRequest.getName() == null || categoryRequest.getName().isEmpty()) {
+            throw new IllegalArgumentException("The category name cannot be empty or null.");
+        }
         categoryHandler.save(categoryRequest);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
@@ -62,8 +68,13 @@ public class CategoryController {
             @ApiResponse(responseCode = "404", description = "Categories not found")
     })
     public ResponseEntity<List<CategoryResponse>> getCategoriesByIds(@RequestParam Set<Long> ids) {
-        List<CategoryResponse> categories = categoryHandler.getCategoriesByIds(ids);
-        return ResponseEntity.ok(categories);
+        try {
+            List<CategoryResponse> categories = categoryHandler.getCategoriesByIds(ids);
+            return ResponseEntity.ok(categories);
+        } catch (CategoryExceptions.CategoryNotFoundException ex) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(Collections.emptyList());
+        }
     }
 
     @GetMapping("/names")
@@ -85,6 +96,9 @@ public class CategoryController {
             @ApiResponse(responseCode = "404", description = "Category not found")
     })
     public ResponseEntity<Void> updateCategory(@RequestBody CategoryRequest categoryRequest) {
+        if (categoryRequest.getName() == null || categoryRequest.getName().isEmpty()) {
+            throw new IllegalArgumentException("The category name cannot be empty or null.");
+        }
         categoryHandler.update(categoryRequest);
         return ResponseEntity.ok().build();
     }
@@ -107,19 +121,11 @@ public class CategoryController {
             @ApiResponse(responseCode = "404", description = "Category not found")
     })
     public ResponseEntity<Void> deleteCategoryById(@PathVariable Long id) {
-        categoryHandler.deleteById(id);
+        if (!categoryHandler.deleteById(id)) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
         return ResponseEntity.ok().build();
     }
 
-    @DeleteMapping("/delete")
-    @Operation(summary = "Delete a category by request", description = "Delete a category based on the provided details in the request body.")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Category deleted successfully"),
-            @ApiResponse(responseCode = "404", description = "Category not found"),
-            @ApiResponse(responseCode = "400", description = "Invalid input")
-    })
-    public ResponseEntity<Void> deleteCategory(@RequestBody CategoryRequest categoryRequest) {
-        categoryHandler.delete(categoryRequest);
-        return ResponseEntity.ok().build();
-    }
+
 }
