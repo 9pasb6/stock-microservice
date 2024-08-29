@@ -4,6 +4,7 @@ import emazon.microservice.stock_microservice.domain.api.IBrandServicePort;
 import emazon.microservice.stock_microservice.domain.exceptions.BrandExceptions;
 import emazon.microservice.stock_microservice.domain.model.Brand;
 import emazon.microservice.stock_microservice.domain.spi.IBrandPersistencePort;
+import emazon.microservice.stock_microservice.domain.util.ErrorMessages;
 import emazon.microservice.stock_microservice.domain.util.ValidationUtils;
 
 import java.util.List;
@@ -17,13 +18,12 @@ public class BrandUseCase implements IBrandServicePort {
         this.brandPersistencePort = brandPersistencePort;
     }
 
-
     @Override
     public Brand save(Brand brand) {
         ValidationUtils.validateBrand(brand);
 
         if (brandPersistencePort.existsByName(brand.getName())) {
-            throw new BrandExceptions.BrandNameAlreadyExistsException("The brand name already exists.");
+            throw new BrandExceptions.BrandNameAlreadyExistsException(ErrorMessages.BRAND_NAME_ALREADY_EXISTS);
         }
 
         return brandPersistencePort.save(brand);
@@ -38,7 +38,7 @@ public class BrandUseCase implements IBrandServicePort {
     public Brand findById(Long id) {
         Brand brand = brandPersistencePort.findById(id);
         if (brand == null) {
-            throw new BrandExceptions.BrandNotFoundException("The brand with ID " + id + " was not found.");
+            throw new BrandExceptions.BrandNotFoundException(ErrorMessages.BRAND_NOT_FOUND + id + ErrorMessages.BRAND_NOT_FOUND_SUFFIX);
         }
         return brand;
     }
@@ -46,7 +46,7 @@ public class BrandUseCase implements IBrandServicePort {
     @Override
     public void delete(Long id) {
         if (!brandPersistencePort.existsById(id)) {
-            throw new BrandExceptions.BrandNotFoundException("The brand with ID " + id + " was not found.");
+            throw new BrandExceptions.BrandNotFoundException(ErrorMessages.BRAND_NOT_FOUND + id + ErrorMessages.BRAND_NOT_FOUND_SUFFIX);
         }
         brandPersistencePort.delete(id);
     }
@@ -62,12 +62,14 @@ public class BrandUseCase implements IBrandServicePort {
 
         Brand existingBrand = brandPersistencePort.findById(brand.getId());
         if (existingBrand == null) {
-            throw new BrandExceptions.BrandNotFoundException("The brand with ID " + brand.getId() + " was not found.");
+            throw new BrandExceptions.BrandNotFoundException(
+                    ErrorMessages.BRAND_NOT_FOUND + brand.getId() + ErrorMessages.BRAND_NOT_FOUND_SUFFIX
+            );
         }
 
         if (!Objects.equals(existingBrand.getName(), brand.getName()) &&
                 brandPersistencePort.existsByName(brand.getName())) {
-            throw new BrandExceptions.BrandNameAlreadyExistsException("The brand name already exists.");
+            throw new BrandExceptions.BrandNameAlreadyExistsException(ErrorMessages.BRAND_NAME_ALREADY_EXISTS);
         }
 
         brandPersistencePort.update(brand);
@@ -77,7 +79,7 @@ public class BrandUseCase implements IBrandServicePort {
     public Brand getBrandByName(String name) {
         Brand brand = brandPersistencePort.getBrandByName(name);
         if (brand == null) {
-            throw new BrandExceptions.BrandNotFoundException("The brand with name '" + name + "' was not found.");
+            throw new BrandExceptions.BrandNotFoundException(ErrorMessages.BRAND_NAME_NOT_FOUND + name + ErrorMessages.BRAND_NOT_FOUND_SUFFIX);
         }
         return brand;
     }

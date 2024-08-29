@@ -10,9 +10,8 @@ import emazon.microservice.stock_microservice.domain.model.Brand;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import java.util.List;
-import java.util.stream.Collectors;
+
 
 @Service
 @RequiredArgsConstructor
@@ -35,8 +34,7 @@ public class BrandHandler implements IBrandHandler {
     public List<BrandResponse> getAllBrands(String order) {
         List<Brand> brands = brandServicePort.findAll(order);
         return brands.stream()
-                .map(brandResponseMapper::brandToResponse)
-                .collect(Collectors.toList());
+                .map(brandResponseMapper::brandToResponse).toList();
     }
 
 

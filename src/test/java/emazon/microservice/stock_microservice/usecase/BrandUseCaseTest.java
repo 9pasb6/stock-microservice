@@ -1,11 +1,9 @@
 package emazon.microservice.stock_microservice.usecase;
 
-import emazon.microservice.stock_microservice.domain.api.IBrandServicePort;
 import emazon.microservice.stock_microservice.domain.exceptions.BrandExceptions;
 import emazon.microservice.stock_microservice.domain.model.Brand;
 import emazon.microservice.stock_microservice.domain.spi.IBrandPersistencePort;
 import emazon.microservice.stock_microservice.domain.usecase.BrandUseCase;
-import emazon.microservice.stock_microservice.domain.util.ValidationUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -160,7 +158,8 @@ class BrandUseCaseTest {
     }
 
     @Test
-    void testDeleteBrand() {
+    void testDeleteBrandById() {
+        when(brandPersistencePort.existsById(1L)).thenReturn(true);
         brandUseCase.delete(1L);
         verify(brandPersistencePort, times(1)).delete(1L);
     }
@@ -179,7 +178,7 @@ class BrandUseCaseTest {
                 BrandExceptions.BrandNotFoundException.class,
                 () -> brandUseCase.getBrandByName("NonExistentBrand")
         );
-        assertEquals("The brand with name 'NonExistentBrand' was not found.", exception.getMessage());
+        assertEquals("The brand with name NonExistentBrand was not found.", exception.getMessage());
     }
 
     @Test
