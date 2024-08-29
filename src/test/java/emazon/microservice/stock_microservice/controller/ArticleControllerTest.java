@@ -129,7 +129,7 @@ class ArticleControllerTest {
         articleRequest.setPrice(BigDecimal.valueOf(456.78));
         articleRequest.setStockQuantity(20);
 
-        mockMvc.perform(put("/api/articles/1")
+        mockMvc.perform(put("/api/articles")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("{\"name\":\"Updated Article\", \"description\":\"Updated Description\", \"price\":456.78, \"stockQuantity\":20}"))
                 .andExpect(status().isOk());
@@ -139,7 +139,7 @@ class ArticleControllerTest {
 
     @Test
     void testUpdateArticle_InvalidInput() throws Exception {
-        mockMvc.perform(put("/api/articles/1")
+        mockMvc.perform(put("/api/articles")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("{\"name\":\"\"}"))
                 .andExpect(status().isBadRequest());
@@ -166,6 +166,7 @@ class ArticleControllerTest {
 
         verify(articleHandler, times(1)).deleteArticle(anyLong());
     }
+
 
     @Test
     void testGetAllByBrandName_Success() throws Exception {
