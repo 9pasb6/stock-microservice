@@ -30,12 +30,12 @@ public class BrandController {
             @ApiResponse(responseCode = "400", description = "Invalid input")
     })
     public ResponseEntity<Void> saveBrand(@RequestBody BrandRequest brandRequest) {
-        try {
+        if (brandRequest.getName() == null || brandRequest.getName().isEmpty()) {
+            throw new InvalidInputException("The brand name cannot be empty or null.");
+        }
             brandHandler.saveBrand(brandRequest);
             return ResponseEntity.status(HttpStatus.CREATED).build();
-        } catch (BrandExceptions.BrandNameAlreadyExistsException ex) {
-            throw new InvalidInputException(ex.getMessage());
-        }
+
     }
 
     @GetMapping
@@ -58,14 +58,17 @@ public class BrandController {
     })
     public ResponseEntity<BrandResponse> getBrandById(@PathVariable Long id) {
         try {
-            BrandResponse brand = brandHandler.getBrand(id);
-            return ResponseEntity.ok(brand);
+            BrandResponse brandResponse = brandHandler.getBrand(id);
+            if (brandResponse == null) {
+                throw new ResourceNotFoundException("Brand not found with ID: " + id);
+            }
+            return ResponseEntity.ok(brandResponse);
         } catch (BrandExceptions.BrandNotFoundException ex) {
             throw new ResourceNotFoundException(ex.getMessage());
         }
     }
 
-    @PutMapping("/{id}")
+    @PutMapping
     @Operation(summary = "Update a brand", description = "Update the details of an existing brand.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Brand updated successfully"),
@@ -73,14 +76,12 @@ public class BrandController {
             @ApiResponse(responseCode = "404", description = "Brand not found")
     })
     public ResponseEntity<Void> updateBrand(@RequestBody BrandRequest brandRequest) {
-        try {
+        if (brandRequest.getName() == null || brandRequest.getName().isEmpty()) {
+            throw new InvalidInputException("The brand name cannot be empty or null.");
+        }
             brandHandler.updateBrand(brandRequest);
             return ResponseEntity.ok().build();
-        } catch (BrandExceptions.BrandNotFoundException ex) {
-            throw new ResourceNotFoundException(ex.getMessage());
-        } catch (BrandExceptions.BrandNameAlreadyExistsException ex) {
-            throw new InvalidInputException(ex.getMessage());
-        }
+
     }
 
     @DeleteMapping("/{id}")
@@ -90,11 +91,10 @@ public class BrandController {
             @ApiResponse(responseCode = "404", description = "Brand not found")
     })
     public ResponseEntity<Void> deleteBrand(@PathVariable Long id) {
-        try {
-            brandHandler.deleteBrand(id);
-            return ResponseEntity.ok().build();
-        } catch (BrandExceptions.BrandNotFoundException ex) {
-            throw new ResourceNotFoundException(ex.getMessage());
+        if (!brandHandler.deleteBrand(id)) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
+        return ResponseEntity.ok().build();
     }
 }
+

@@ -5,8 +5,6 @@ import emazon.microservice.stock_microservice.aplication.dto.response.BrandRespo
 import emazon.microservice.stock_microservice.aplication.handler.IBrandHandler;
 import emazon.microservice.stock_microservice.infraestructure.input.rest.controller.BrandController;
 import emazon.microservice.stock_microservice.infraestructure.input.rest.exception.GlobalExceptionHandler;
-import emazon.microservice.stock_microservice.infraestructure.input.rest.exception.InvalidInputException;
-import emazon.microservice.stock_microservice.infraestructure.input.rest.exception.ResourceNotFoundException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -118,7 +116,7 @@ class BrandControllerTest {
 
         when(brandHandler.updateBrand(any(BrandRequest.class))).thenReturn(true);
 
-        mockMvc.perform(put("/api/brands/1")
+        mockMvc.perform(put("/api/brands")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("{\"name\":\"Updated Brand\"}"))
                 .andExpect(status().isOk());
@@ -128,7 +126,7 @@ class BrandControllerTest {
 
     @Test
     void testUpdateBrand_InvalidInput() throws Exception {
-        mockMvc.perform(put("/api/brands/1")
+        mockMvc.perform(put("/api/brands")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("{\"name\":\"\"}"))
                 .andExpect(status().isBadRequest());
@@ -149,7 +147,7 @@ class BrandControllerTest {
     }
 
     @Test
-    void testDeleteBrand_NotFound() throws Exception {
+    void testDeleteBrandById_NotFound() throws Exception {
         when(brandHandler.deleteBrand(anyLong())).thenReturn(false);
 
         mockMvc.perform(delete("/api/brands/1"))
@@ -157,4 +155,6 @@ class BrandControllerTest {
 
         verify(brandHandler, times(1)).deleteBrand(anyLong());
     }
+
+
 }
