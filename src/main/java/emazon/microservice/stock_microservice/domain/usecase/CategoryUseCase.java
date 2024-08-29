@@ -85,7 +85,7 @@ public class CategoryUseCase implements ICategoryServicePort {
             throw new CategoryExceptions.CategoryNotFoundException("Category names not found for IDs: " + ids);
         }
         if (categoryNames.size() != ids.size()) {
-            throw new CategoryExceptions.CategoryNotFoundException("Some category names not found for IDs: " + ids);
+            throw new CategoryExceptions.CategoryNotFoundException("Some category names not found for IDs:  " + ids);
         }
         return categoryNames;
     }
