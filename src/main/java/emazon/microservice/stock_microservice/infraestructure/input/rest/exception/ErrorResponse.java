@@ -9,7 +9,6 @@ public class ErrorResponse {
         this.message = message;
     }
 
-    // Getters y setters
     public int getStatus() {
         return status;
     }

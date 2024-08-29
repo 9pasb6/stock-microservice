@@ -4,6 +4,7 @@ import emazon.microservice.stock_microservice.domain.api.ICategoryServicePort;
 import emazon.microservice.stock_microservice.domain.exceptions.CategoryExceptions;
 import emazon.microservice.stock_microservice.domain.model.Category;
 import emazon.microservice.stock_microservice.domain.spi.ICategoryPersistencePort;
+import emazon.microservice.stock_microservice.domain.util.ErrorMessages;
 import emazon.microservice.stock_microservice.domain.util.ValidationUtils;
 
 import java.util.List;
@@ -23,7 +24,7 @@ public class CategoryUseCase implements ICategoryServicePort {
         ValidationUtils.validateCategory(category);
 
         if (categoryPersistencePort.existsByName(category.getName())) {
-            throw new CategoryExceptions.CategoryNameAlreadyExistsException("The category name already exists.");
+            throw new CategoryExceptions.CategoryNameAlreadyExistsException(ErrorMessages.CATEGORY_NAME_ALREADY_EXISTS);
         }
 
         return categoryPersistencePort.save(category);
@@ -33,7 +34,7 @@ public class CategoryUseCase implements ICategoryServicePort {
     public Category findByName(String name) {
         Category category = categoryPersistencePort.findByName(name);
         if (category == null) {
-            throw new CategoryExceptions.CategoryNotFoundException("The category with name '" + name + "' was not found.");
+            throw new CategoryExceptions.CategoryNotFoundException(ErrorMessages.CATEGORY_NAME_NOT_FOUND + name + ErrorMessages.CATEGORY_NOT_FOUND_SUFFIX);
         }
         return category;
     }
@@ -45,7 +46,7 @@ public class CategoryUseCase implements ICategoryServicePort {
         Category existingCategory = categoryPersistencePort.findById(category.getId());
         if (existingCategory != null && !Objects.equals(existingCategory.getName(), category.getName()) &&
                 categoryPersistencePort.existsByName(category.getName())) {
-            throw new CategoryExceptions.CategoryNameAlreadyExistsException("The category name already exists.");
+            throw new CategoryExceptions.CategoryNameAlreadyExistsException(ErrorMessages.CATEGORY_NAME_ALREADY_EXISTS);
         }
 
         return categoryPersistencePort.update(category);
@@ -64,7 +65,7 @@ public class CategoryUseCase implements ICategoryServicePort {
     @Override
     public void deleteById(Long id) {
         if (!categoryPersistencePort.existsById(id)) {
-            throw new CategoryExceptions.CategoryNotFoundException("Category not found with ID: " + id);
+            throw new CategoryExceptions.CategoryNotFoundException(ErrorMessages.CATEGORY_NOT_FOUND + id);
         }
         categoryPersistencePort.deleteById(id);
     }
@@ -73,7 +74,7 @@ public class CategoryUseCase implements ICategoryServicePort {
     public List<Category> getCategoriesByIds(Set<Long> ids) {
         List<Category> categories = categoryPersistencePort.getCategoriesByIds(ids);
         if (categories.isEmpty()) {
-            throw new CategoryExceptions.CategoryNotFoundException("Categories not found for IDs: " + ids);
+            throw new CategoryExceptions.CategoryNotFoundException(ErrorMessages.CATEGORIES_NOT_FOUND_FOR_IDS + ids);
         }
         return categories;
     }
@@ -82,10 +83,10 @@ public class CategoryUseCase implements ICategoryServicePort {
     public Set<String> getCategoryNamesByIds(Set<Long> ids) {
         Set<String> categoryNames = categoryPersistencePort.getCategoryNamesByIds(ids);
         if (categoryNames.isEmpty()) {
-            throw new CategoryExceptions.CategoryNotFoundException("Category names not found for IDs: " + ids);
+            throw new CategoryExceptions.CategoryNotFoundException(ErrorMessages.CATEGORY_NAMES_NOT_FOUND_FOR_IDS + ids);
         }
         if (categoryNames.size() != ids.size()) {
-            throw new CategoryExceptions.CategoryNotFoundException("Some category names not found for IDs:  " + ids);
+            throw new CategoryExceptions.CategoryNotFoundException(ErrorMessages.SOME_CATEGORY_NAMES_NOT_FOUND_FOR_IDS + ids);
         }
         return categoryNames;
     }
