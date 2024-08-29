@@ -3,6 +3,10 @@ package emazon.microservice.stock_microservice.infraestructure.input.rest.contro
 import emazon.microservice.stock_microservice.aplication.dto.request.ArticleRequest;
 import emazon.microservice.stock_microservice.aplication.dto.response.ArticleResponse;
 import emazon.microservice.stock_microservice.aplication.handler.IArticleHandler;
+import emazon.microservice.stock_microservice.domain.exceptions.ArticleExceptions;
+import emazon.microservice.stock_microservice.domain.util.ErrorMessages;
+import emazon.microservice.stock_microservice.infraestructure.input.rest.exception.InvalidInputException;
+import emazon.microservice.stock_microservice.infraestructure.input.rest.exception.ResourceNotFoundException;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -27,6 +31,9 @@ public class ArticleController {
             @ApiResponse(responseCode = "400", description = "Invalid input")
     })
     public ResponseEntity<Void> saveArticle(@RequestBody ArticleRequest articleRequest) {
+        if (articleRequest.getName() == null || articleRequest.getName().isEmpty()) {
+            throw new InvalidInputException(ErrorMessages.ARTICLE_NAME_NOT_FOUND);
+        }
         articleHandler.saveArticle(articleRequest);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
@@ -50,17 +57,27 @@ public class ArticleController {
             @ApiResponse(responseCode = "404", description = "Article not found")
     })
     public ResponseEntity<ArticleResponse> getArticle(@PathVariable Long id) {
-        ArticleResponse article = articleHandler.getArticle(id);
-        return ResponseEntity.ok(article);
+        try {
+            ArticleResponse articleResponse = articleHandler.getArticle(id);
+            if (articleResponse == null) {
+                throw new ResourceNotFoundException(ErrorMessages.ARTICLE_NOT_FOUND + id);
+            }
+            return ResponseEntity.ok(articleResponse);
+        } catch (ArticleExceptions.ArticleNotFoundException ex) {
+            throw new ResourceNotFoundException(ex.getMessage());
+        }
     }
 
-    @PutMapping("/{id}")
+    @PutMapping
     @Operation(summary = "Update an article", description = "Update the details of an existing article.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Article updated successfully"),
             @ApiResponse(responseCode = "400", description = "Invalid input")
     })
     public ResponseEntity<Void> updateArticle(@RequestBody ArticleRequest articleRequest) {
+        if (articleRequest.getName() == null || articleRequest.getName().isEmpty()) {
+            throw new InvalidInputException(ErrorMessages.ARTICLE_NAME_NOT_FOUND);
+        }
         articleHandler.updateArticle(articleRequest);
         return ResponseEntity.ok().build();
     }
@@ -72,7 +89,9 @@ public class ArticleController {
             @ApiResponse(responseCode = "404", description = "Article not found")
     })
     public ResponseEntity<Void> deleteArticle(@PathVariable Long id) {
-        articleHandler.deleteArticle(id);
+        if (!articleHandler.deleteArticle(id)) {
+            throw new ResourceNotFoundException(ErrorMessages.ARTICLE_NOT_FOUND + id);
+        }
         return ResponseEntity.ok().build();
     }
 
@@ -85,6 +104,9 @@ public class ArticleController {
     public ResponseEntity<List<ArticleResponse>> getAllByBrandName(
             @RequestParam String brandName,
             @RequestParam(defaultValue = "asc") String order) {
+        if (brandName == null || brandName.isEmpty()) {
+            throw new InvalidInputException(ErrorMessages.ARTICLE_NAME_NOT_FOUND);
+        }
         List<ArticleResponse> articles = articleHandler.getAllByBrandName(brandName, order);
         return ResponseEntity.ok(articles);
     }
@@ -98,6 +120,9 @@ public class ArticleController {
     public ResponseEntity<List<ArticleResponse>> getAllByCategoryName(
             @RequestParam String categoryName,
             @RequestParam(defaultValue = "asc") String order) {
+        if (categoryName == null || categoryName.isEmpty()) {
+            throw new InvalidInputException(ErrorMessages.ARTICLE_NAME_NOT_FOUND);
+        }
         List<ArticleResponse> articles = articleHandler.getAllByCategoryName(categoryName, order);
         return ResponseEntity.ok(articles);
     }

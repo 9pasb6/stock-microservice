@@ -250,10 +250,12 @@ class ArticleUseCaseTest {
     }
 
     @Test
-    void testDeleteArticle() {
+    void testDeleteArticleById() {
+        when(articlePersistencePort.existsById(1L)).thenReturn(true);
         articleUseCase.deleteArticle(1L);
         verify(articlePersistencePort, times(1)).deleteArticle(1L);
     }
+
 
     @Test
     void testGetAllByBrandName_Success() {

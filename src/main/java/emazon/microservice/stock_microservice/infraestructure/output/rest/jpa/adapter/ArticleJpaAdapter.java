@@ -64,6 +64,11 @@ public class ArticleJpaAdapter implements IArticlePersistencePort {
     }
 
     @Override
+    public boolean existsById(Long id) {
+        return articleRepository.existsById(id);
+    }
+
+    @Override
     public List<Article> findAllByBrandName(String brandName, String order) {
         Pageable pageable = createPageRequest(order);
         return articleRepository.findByBrandName(brandName, pageable).stream()

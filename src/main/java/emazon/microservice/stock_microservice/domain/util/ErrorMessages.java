@@ -11,6 +11,7 @@ public class ErrorMessages {
     public static final String BRAND_NOT_FOUND_SUFFIX = " was not found.";
     public static final String BRAND_NAME_ALREADY_EXISTS = "The brand name already exists.";
     public static final String BRAND_NAME_NOT_FOUND = "The brand with name ";
+    public static final String BRAND_NAME_CANNOT_BE_NULL = "The Brand with name can't be null or empty.";
 
 
     public static final String CATEGORY_NOT_FOUND = "Category not found with ID: ";
@@ -20,6 +21,8 @@ public class ErrorMessages {
     public static final String SOME_CATEGORY_NAMES_NOT_FOUND_FOR_IDS = "Some category names not found for IDs: ";
     public static final String CATEGORY_NAME_NOT_FOUND = "The category with name ";
     public static final String CATEGORY_NOT_FOUND_SUFFIX = " was not found.";
+    public static final String CATEGORY_NAME_CANNOT_BE_NULL = "The Category with name can't be null or empty.";
+
 
 
     public static final String ARTICLE_NAME_ALREADY_EXISTS = "The article name already exists.";
@@ -27,4 +30,5 @@ public class ErrorMessages {
     public static final String BRAND_NOT_FOUND_FOR_ARTICLE = "The brand '";
     public static final String CATEGORY_NOT_FOUND_FOR_ARTICLE = "The category '";
     public static final String DOES_NOT_EXIST = "' does not exist.";
+    public static final String ARTICLE_NAME_NOT_FOUND = "The Article with name can't be null or empty.";
 }

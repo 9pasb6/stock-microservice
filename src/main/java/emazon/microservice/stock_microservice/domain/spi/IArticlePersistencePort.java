@@ -18,6 +18,8 @@ public interface IArticlePersistencePort {
 
     boolean existsByName(String name);
 
+    boolean existsById(Long id);
+
     List<Article> findAllByBrandName(String brandName, String order);
 
     List<Article> findAllByCategoryName(String categoryName, String order);
