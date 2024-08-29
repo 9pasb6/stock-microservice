@@ -186,7 +186,7 @@ class CategoryControllerTest {
 
     @Test
     void testUpdateCategory_InvalidInput() throws Exception {
-        mockMvc.perform(put("/api/categories/1")
+        mockMvc.perform(put("/api/categories")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("{\"name\":\"\"}"))
                 .andExpect(status().isBadRequest());

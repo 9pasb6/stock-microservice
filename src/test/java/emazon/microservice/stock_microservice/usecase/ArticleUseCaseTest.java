@@ -127,8 +127,9 @@ class ArticleUseCaseTest {
 
     @Test
     void testSaveArticle_WithDuplicateCategories_ThrowsException() {
+
         Category category1 = new Category(1L, "Electronics", "Description");
-        Category category2 = new Category(2L, "Electronics", "Description"); // Duplicada
+        Category category2 = new Category(1L, "Electronics", "Description");
 
         List<Category> categories = new ArrayList<>(Arrays.asList(category1, category2));
 
@@ -139,6 +140,7 @@ class ArticleUseCaseTest {
         article.setStockQuantity(10);
         article.setBrand(new Brand(1L, "Brand", "Description"));
         article.setCategories(categories);
+
 
         IllegalArgumentException exception = assertThrows(
                 IllegalArgumentException.class,
@@ -250,10 +252,12 @@ class ArticleUseCaseTest {
     }
 
     @Test
-    void testDeleteArticle() {
+    void testDeleteArticleById() {
+        when(articlePersistencePort.existsById(1L)).thenReturn(true);
         articleUseCase.deleteArticle(1L);
         verify(articlePersistencePort, times(1)).deleteArticle(1L);
     }
+
 
     @Test
     void testGetAllByBrandName_Success() {

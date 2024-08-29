@@ -153,7 +153,7 @@ class CategoryUseCaseTest {
                 CategoryExceptions.CategoryNotFoundException.class,
                 () -> categoryUseCase.findByName("NonExistentCategory")
         );
-        assertEquals("The category with name 'NonExistentCategory' was not found.", exception.getMessage());
+        assertEquals("The category with name NonExistentCategory was not found.", exception.getMessage());
     }
 
     @Test

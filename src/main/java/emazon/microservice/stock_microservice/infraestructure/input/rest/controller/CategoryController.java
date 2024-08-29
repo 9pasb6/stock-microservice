@@ -3,8 +3,8 @@ package emazon.microservice.stock_microservice.infraestructure.input.rest.contro
 import emazon.microservice.stock_microservice.aplication.dto.request.CategoryRequest;
 import emazon.microservice.stock_microservice.aplication.dto.response.CategoryResponse;
 import emazon.microservice.stock_microservice.aplication.handler.ICategoryHandler;
-
 import emazon.microservice.stock_microservice.domain.exceptions.CategoryExceptions;
+import emazon.microservice.stock_microservice.domain.util.ErrorMessages;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -32,7 +32,7 @@ public class CategoryController {
     })
     public ResponseEntity<Void> saveCategory(@RequestBody CategoryRequest categoryRequest) {
         if (categoryRequest.getName() == null || categoryRequest.getName().isEmpty()) {
-            throw new IllegalArgumentException("The category name cannot be empty or null.");
+            throw new IllegalArgumentException(ErrorMessages.CATEGORY_NAME_CANNOT_BE_NULL);
         }
         categoryHandler.save(categoryRequest);
         return ResponseEntity.status(HttpStatus.CREATED).build();
@@ -96,7 +96,7 @@ public class CategoryController {
     })
     public ResponseEntity<Void> updateCategory(@RequestBody CategoryRequest categoryRequest) {
         if (categoryRequest.getName() == null || categoryRequest.getName().isEmpty()) {
-            throw new IllegalArgumentException("The category name cannot be empty or null.");
+            throw new IllegalArgumentException(ErrorMessages.CATEGORY_NAME_CANNOT_BE_NULL);
         }
         categoryHandler.update(categoryRequest);
         return ResponseEntity.ok().build();
@@ -125,6 +125,5 @@ public class CategoryController {
         }
         return ResponseEntity.ok().build();
     }
-
 
 }

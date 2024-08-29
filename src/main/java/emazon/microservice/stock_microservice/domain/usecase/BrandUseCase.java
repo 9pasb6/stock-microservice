@@ -30,7 +30,7 @@ public class BrandUseCase implements IBrandServicePort {
     }
 
     @Override
-    public List<Brand> findAll(String order) {
+    public List<Brand> findAll(String  order) {
         return this.brandPersistencePort.findAll(order);
     }
 
@@ -46,7 +46,7 @@ public class BrandUseCase implements IBrandServicePort {
     @Override
     public void delete(Long id) {
         if (!brandPersistencePort.existsById(id)) {
-            throw new BrandExceptions.BrandNotFoundException(ErrorMessages.BRAND_NOT_FOUND + id + ErrorMessages.BRAND_NOT_FOUND_SUFFIX);
+            throw new BrandExceptions.BrandNotFoundException(ErrorMessages.BRAND_NOT_FOUND + id +  ErrorMessages.BRAND_NOT_FOUND_SUFFIX);
         }
         brandPersistencePort.delete(id);
     }
@@ -63,7 +63,7 @@ public class BrandUseCase implements IBrandServicePort {
         Brand existingBrand = brandPersistencePort.findById(brand.getId());
         if (existingBrand == null) {
             throw new BrandExceptions.BrandNotFoundException(
-                    ErrorMessages.BRAND_NOT_FOUND + brand.getId() + ErrorMessages.BRAND_NOT_FOUND_SUFFIX
+                    ErrorMessages.BRAND_NOT_FOUND + brand.getId() +  ErrorMessages.BRAND_NOT_FOUND_SUFFIX
             );
         }
 

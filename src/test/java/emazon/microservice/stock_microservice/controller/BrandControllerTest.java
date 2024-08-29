@@ -102,7 +102,7 @@ class BrandControllerTest {
                 .andExpect(status().isNotFound())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.status").value(HttpStatus.NOT_FOUND.value()))
-                .andExpect(jsonPath("$.message").value("Brand not found with ID: 1"))
+                .andExpect(jsonPath("$.message").value("The brand with ID 1 was not found."))
                 .andReturn();
 
         String responseBody = result.getResponse().getContentAsString();

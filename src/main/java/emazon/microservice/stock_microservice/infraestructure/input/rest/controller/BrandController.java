@@ -4,6 +4,7 @@ import emazon.microservice.stock_microservice.aplication.dto.request.BrandReques
 import emazon.microservice.stock_microservice.aplication.dto.response.BrandResponse;
 import emazon.microservice.stock_microservice.aplication.handler.IBrandHandler;
 import emazon.microservice.stock_microservice.domain.exceptions.BrandExceptions;
+import emazon.microservice.stock_microservice.domain.util.ErrorMessages;
 import emazon.microservice.stock_microservice.infraestructure.input.rest.exception.InvalidInputException;
 import emazon.microservice.stock_microservice.infraestructure.input.rest.exception.ResourceNotFoundException;
 import io.swagger.v3.oas.annotations.Operation;
@@ -31,11 +32,10 @@ public class BrandController {
     })
     public ResponseEntity<Void> saveBrand(@RequestBody BrandRequest brandRequest) {
         if (brandRequest.getName() == null || brandRequest.getName().isEmpty()) {
-            throw new InvalidInputException("The brand name cannot be empty or null.");
+            throw new InvalidInputException(ErrorMessages.BRAND_NAME_CANNOT_BE_NULL);
         }
-            brandHandler.saveBrand(brandRequest);
-            return ResponseEntity.status(HttpStatus.CREATED).build();
-
+        brandHandler.saveBrand(brandRequest);
+        return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
     @GetMapping
@@ -60,7 +60,7 @@ public class BrandController {
         try {
             BrandResponse brandResponse = brandHandler.getBrand(id);
             if (brandResponse == null) {
-                throw new ResourceNotFoundException("Brand not found with ID: " + id);
+                throw new ResourceNotFoundException(ErrorMessages.BRAND_NOT_FOUND + id + ErrorMessages.BRAND_NOT_FOUND_SUFFIX);
             }
             return ResponseEntity.ok(brandResponse);
         } catch (BrandExceptions.BrandNotFoundException ex) {
@@ -77,11 +77,10 @@ public class BrandController {
     })
     public ResponseEntity<Void> updateBrand(@RequestBody BrandRequest brandRequest) {
         if (brandRequest.getName() == null || brandRequest.getName().isEmpty()) {
-            throw new InvalidInputException("The brand name cannot be empty or null.");
+            throw new InvalidInputException(ErrorMessages.BRAND_NAME_CANNOT_BE_NULL);
         }
-            brandHandler.updateBrand(brandRequest);
-            return ResponseEntity.ok().build();
-
+        brandHandler.updateBrand(brandRequest);
+        return ResponseEntity.ok().build();
     }
 
     @DeleteMapping("/{id}")
@@ -92,9 +91,8 @@ public class BrandController {
     })
     public ResponseEntity<Void> deleteBrand(@PathVariable Long id) {
         if (!brandHandler.deleteBrand(id)) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+            throw new ResourceNotFoundException(ErrorMessages.BRAND_NOT_FOUND + id + ErrorMessages.BRAND_NOT_FOUND_SUFFIX);
         }
         return ResponseEntity.ok().build();
     }
 }
-
