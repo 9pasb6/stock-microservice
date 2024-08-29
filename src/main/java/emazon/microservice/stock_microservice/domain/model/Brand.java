@@ -14,7 +14,7 @@ public class Brand {
     private String name;
     private String description;
 
-    // Constructors
+
     public Brand() {
     }
 

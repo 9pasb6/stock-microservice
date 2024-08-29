@@ -1,17 +1,11 @@
 package emazon.microservice.stock_microservice.aplication.mapper.response;
 
 import emazon.microservice.stock_microservice.aplication.dto.response.ArticleResponse;
-import emazon.microservice.stock_microservice.aplication.dto.response.BrandResponse;
-import emazon.microservice.stock_microservice.aplication.dto.response.CategoryResponse;
 import emazon.microservice.stock_microservice.domain.model.Article;
-import emazon.microservice.stock_microservice.domain.model.Brand;
-import emazon.microservice.stock_microservice.domain.model.Category;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
-import org.mapstruct.Mappings;
 import org.mapstruct.ReportingPolicy;
 
-import java.util.Set;
 
 @Mapper(
         componentModel = "spring",

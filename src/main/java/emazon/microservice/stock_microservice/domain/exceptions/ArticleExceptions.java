@@ -2,6 +2,10 @@ package emazon.microservice.stock_microservice.domain.exceptions;
 
 public class ArticleExceptions {
 
+    private ArticleExceptions() {
+        throw new UnsupportedOperationException("This is a utility class and cannot be instantiated");
+    }
+
     public static class BrandNotFoundException extends RuntimeException {
         public BrandNotFoundException(String message) {
             super(message);

@@ -21,7 +21,7 @@ public class ValidationUtils {
         if (article.getPrice() == null || article.getPrice().compareTo(BigDecimal.ZERO) <= 0) {
             throw new IllegalArgumentException("The article price must be greater than zero.");
         }
-        if (article.getStockQuantity() == null || article.getStockQuantity() < 0) {
+        if (article.getStockQuantity() == null || article.getStockQuantity() <= 0) {
             throw new IllegalArgumentException("The article stock quantity cannot be negative.");
         }
         if (article.getBrandId() == null) {
