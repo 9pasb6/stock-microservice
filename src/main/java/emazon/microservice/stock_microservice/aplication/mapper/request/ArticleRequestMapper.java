@@ -7,7 +7,7 @@ import emazon.microservice.stock_microservice.domain.model.Category;
 import org.mapstruct.*;
 
 import java.util.List;
-import java.util.stream.Collectors;
+
 
 @Mapper(
         componentModel = "spring",
@@ -32,7 +32,6 @@ public interface ArticleRequestMapper {
     @Named("categoryIdsToCategories")
     default List<Category> mapCategoryIdsToCategories(List<Long> categoryIds) {
         return categoryIds.stream()
-                .map(id -> new Category(id, null, null))
-                .collect(Collectors.toList());
+                .map(id -> new Category(id, null, null)).toList();
     }
 }

@@ -10,9 +10,8 @@ import emazon.microservice.stock_microservice.domain.model.Article;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import java.util.List;
-import java.util.stream.Collectors;
+
 
 @Service
 @RequiredArgsConstructor
@@ -33,8 +32,7 @@ public class ArticleHandler implements IArticleHandler {
     public List<ArticleResponse> getAllArticles(String order) {
         List<Article> articles = articleServicePort.getAllArticles(order);
         return articles.stream()
-                .map(articleResponseMapper::articleToArticleResponse)
-                .collect(Collectors.toList());
+                .map(articleResponseMapper::articleToArticleResponse).toList();
     }
 
     @Override
@@ -59,16 +57,14 @@ public class ArticleHandler implements IArticleHandler {
     public List<ArticleResponse> getAllByBrandName(String brandName, String order) {
         List<Article> articles = articleServicePort.getAllByBrandName(brandName, order);
         return articles.stream()
-                .map(articleResponseMapper::articleToArticleResponse)
-                .collect(Collectors.toList());
+                .map(articleResponseMapper::articleToArticleResponse).toList();
     }
 
     @Override
     public List<ArticleResponse> getAllByCategoryName(String categoryName, String order) {
         List<Article> articles = articleServicePort.getAllByCategoryName(categoryName, order);
         return articles.stream()
-                .map(articleResponseMapper::articleToArticleResponse)
-                .collect(Collectors.toList());
+                .map(articleResponseMapper::articleToArticleResponse).toList();
     }
 
 }
